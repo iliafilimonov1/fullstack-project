@@ -2,12 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { RiEyeLine, RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
 
-interface DropdownMenuProps<T> {
-  onOptionSelect?: (option: string, row: T) => void;
-  row: T;
+interface DropdownMenuProps {
+  onOptionSelect?: (option: string) => void;
 }
 
-const DropdownMenu = <T,>({ onOptionSelect, row }: DropdownMenuProps<T>) => {
+const DropdownMenu = ({ onOptionSelect }: DropdownMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLUListElement>(null);
 
@@ -18,7 +17,7 @@ const DropdownMenu = <T,>({ onOptionSelect, row }: DropdownMenuProps<T>) => {
   const handleItemClick = (option: string) => {
     setIsOpen(false);
     if (onOptionSelect) {
-      onOptionSelect(option, row);
+      onOptionSelect(option);
     }
   };
 

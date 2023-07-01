@@ -47,7 +47,6 @@ const Table = <T,>({ data, headers, onDropdownOptionSelect }: TableProps<T>): Re
                 <td className="p-0">
                   <DropdownMenu
                     onOptionSelect={(option) => handleDropdownOptionClick(option, item)}
-                    row={item}
                   />
                 </td>
               </tr>
