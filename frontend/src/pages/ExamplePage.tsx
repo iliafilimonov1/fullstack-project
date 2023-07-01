@@ -123,7 +123,7 @@ const ExamplePage: React.FC = () => {
         Добавить студента
       </Button>
       {!!studentsStore.list?.length && (
-        <Table<Student>
+        <Table
           data={studentsStore.list}
           headers={[
             { key: 'name', name: 'Имя', width: 120 },

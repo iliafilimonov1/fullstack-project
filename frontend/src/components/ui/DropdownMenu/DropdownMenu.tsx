@@ -1,12 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import { RiEyeLine, RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
+
+interface DropDownItem {
+  text: string;
+  icon: React.ReactNode;
+}
 
 interface DropdownMenuProps {
+  items: DropDownItem[];
   onOptionSelect?: (option: string) => void;
 }
 
-const DropdownMenu = ({ onOptionSelect }: DropdownMenuProps) => {
+const DropdownMenu = ({ items, onOptionSelect }: DropdownMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLUListElement>(null);
 
@@ -49,36 +54,18 @@ const DropdownMenu = ({ onOptionSelect }: DropdownMenuProps) => {
           ref={menuRef}
           className="absolute right-0 z-10 w-60 py-2 mb-2 mt-2 bg-white rounded-md shadow-lg"
         >
-          <li>
-            <button
-              type="button"
-              className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
-              onClick={() => handleItemClick('Открыть')}
-            >
-              <RiEyeLine className="text-gray-600 mr-2 w-4" size={18} />
-              Открыть
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
-              onClick={() => handleItemClick('Редактировать')}
-            >
-              <RiEdit2Line className="text-gray-600 mr-2 w-4" size={18} />
-              Редактировать
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
-              onClick={() => handleItemClick('Удалить')}
-            >
-              <RiDeleteBinLine className="text-gray-600 mr-2 w-4" size={18} />
-              Удалить
-            </button>
-          </li>
+          {items.map((item, index) => (
+            <li key={index}>
+              <button
+                type="button"
+                className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
+                onClick={() => handleItemClick(item.text)}
+              >
+                {item.icon}
+                {item.text}
+              </button>
+            </li>
+          ))}
         </ul>
       )}
     </div>
