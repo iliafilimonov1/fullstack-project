@@ -1,105 +1,84 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import DropdownMenu from '../DropdownMenu/DropdownMenu';
 
-interface TableProps<T extends Partial<Record<keyof T, React.ReactNode>>> {
+interface TableProps<T> {
   headers: { key: keyof T; name: string; width?: number }[];
   data: T[];
   onRowClick?: (row: T) => void;
+  onRowEdit?: (row: T) => void;
+  onRowDelete?: (row: T) => void;
+  isDropdownOpen?: boolean;
+  onDropdownClick?: () => void;
 }
 
-const Table = <T extends Partial<Record<keyof T, React.ReactNode>>>({
-  data,
-  headers,
-  onRowClick,
-}: TableProps<T>): React.ReactElement => {
+const Table = <T,>({ data, headers, onRowClick, onRowEdit, onRowDelete }: TableProps<T>): React.ReactElement => {
+  const headsRef = useRef<HTMLTableRowElement>(null);
+
   const handleRowClick = (row: T) => {
     if (onRowClick) {
       onRowClick(row);
     }
   };
-  const headsRef = useRef<HTMLTableRowElement>(null);
 
-  const [draggableElement, setDraggableElement] = useState<keyof T>();
-
-  const [localHeaders, setLocalHeaders] = useState(headers);
-
-  const dragHandler = useCallback((
-    eventHeaderKey: keyof T,
-    event: React.DragEvent<HTMLHeadElement>,
-  ) => {
-    const newHeaders = [...localHeaders];
-    const draggableHeaderIndex = localHeaders.findIndex((h) => h.key === draggableElement);
-    const dragOverHeaderIndex = localHeaders.findIndex((h) => h.key === eventHeaderKey);
-
-    if (dragOverHeaderIndex > draggableHeaderIndex) {
-      newHeaders.splice(
-        draggableHeaderIndex,
-        2,
-        ...[localHeaders[dragOverHeaderIndex], localHeaders[draggableHeaderIndex]],
-      );
-    } else if (dragOverHeaderIndex < draggableHeaderIndex) {
-      newHeaders.splice(
-        dragOverHeaderIndex,
-        2,
-        ...[localHeaders[draggableHeaderIndex], localHeaders[dragOverHeaderIndex]],
-      );
+  const handleRowEdit = (row: T) => {
+    if (onRowEdit) {
+      onRowEdit(row);
     }
-    setLocalHeaders(newHeaders);
-  }, [draggableElement, localHeaders]);
+  };
+
+  const handleRowDelete = (row: T) => {
+    if (onRowDelete) {
+      onRowDelete(row);
+    }
+  };
 
   return (
-    <table className="w-full border-collapse">
-      <thead>
-        <tr
-          ref={headsRef}
-        >
-          {localHeaders.map((header) => (
-            <th
-              key={header.key.toString()}
-              className="py-2 px-4 font-medium bg-blue-200 text-blue-500 border border-blue-500 cursor-move"
-              onDragOver={(e) => {
-                dragHandler(header.key, e);
-              }}
-              onDragStart={() => setDraggableElement(header.key)}
-              style={{
-                width: header.width,
-              }}
-              draggable
-            >
-              {header.name}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {data?.length ? (
-          data.map((item, index) => (
-            <tr
-              key={`${index.toString()}_`}
-              onClick={() => handleRowClick(item)}
-            >
-              {localHeaders.map((header) => (
-                <td
-                  key={`${header.key.toString()}${index.toString()}`}
-                  className="py-2 px-4 border"
-                >
-                  {item[header.key]}
-                </td>
-              ))}
-            </tr>
-          ))
-        ) : (
-          <tr>
-            <td
-              className="py-2 px-4 text-center border"
-              colSpan={headers.length}
-            >
-              No students available
-            </td>
+    <>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr ref={headsRef}>
+            {headers.map((header) => (
+              <th
+                key={String(header.key)}
+                className="py-2 px-4 font-medium cursor-move bg-blue-200 text-blue-500 border border-blue-500"
+                style={{
+                  width: header.width,
+                }}
+              >
+                {header.name}
+              </th>
+            ))}
+            <th className="py-2 px-4"></th>
           </tr>
-        )}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.length ? (
+            data.map((item, index) => (
+              <tr key={`${index}_${String(item[headers[0].key])}`} onClick={() => handleRowClick(item)}>
+                {headers.map((header) => (
+                  <td key={`${String(header.key)}_${String(item[headers[0].key])}`} className="py-2 px-4 border">
+                    {String(item[header.key])}
+                  </td>
+                ))}
+                <td className='p-0'>
+                  <DropdownMenu
+                    onViewClick={() => handleRowEdit(item)}
+                    onEditClick={() => handleRowEdit(item)}
+                    onDeleteClick={() => handleRowDelete(item)}
+                  />
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td className="py-2 px-4 text-center border" colSpan={headers.length + 1}>
+                No students available
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </>
   );
 };
 

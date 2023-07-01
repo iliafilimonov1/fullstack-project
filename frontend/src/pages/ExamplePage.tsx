@@ -13,12 +13,7 @@ const ExamplePage: React.FC = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | undefined>(undefined);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isFormEmpty, setFormEmpty] = useState(true);
-
-  const handleRowClick = (row: Student) => {
-    setSelectedStudent(row);
-    setFormEmpty(false);
-    setDrawerOpen(true);
-  };
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const handleButtonClick = () => {
     setSelectedStudent(undefined);
@@ -82,6 +77,39 @@ const ExamplePage: React.FC = () => {
     fetchData();
   }, [studentsStore]);
 
+  const handleEditClick = (student: Student) => {
+    if (student && selectedStudent) {
+      setFormEmpty(false);
+      setDrawerOpen(true);
+    }
+  };
+
+  const handleDeleteClick = (student: Student) => {
+    if (student) {
+      setDrawerOpen(false);
+      deleteStudent(student);
+    }
+  };
+
+  const deleteStudent = async (student: Student) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/students/${student.id}`);
+
+      if (response.status === 200) {
+        studentsStore.deleteStudent(student.id);
+        setSelectedStudent(undefined);
+      } else {
+        console.error('Ошибка при удалении студента');
+      }
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса', error);
+    }
+  };
+
+  const handleDropdownClick = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <>
       {isDrawerOpen && (
@@ -111,7 +139,10 @@ const ExamplePage: React.FC = () => {
             { key: 'groupName', name: 'Наименование группы', width: 300 },
             { key: 'address', name: 'Адрес' },
           ]}
-          onRowClick={handleRowClick}
+          onRowEdit={(student) => handleEditClick(student)}
+          onRowDelete={(student) => handleDeleteClick(student)}
+          isDropdownOpen={isDropdownOpen}
+          onDropdownClick={handleDropdownClick}
         />
       )}
     </>
