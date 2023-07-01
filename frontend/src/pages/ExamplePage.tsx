@@ -12,25 +12,38 @@ const ExamplePage: React.FC = () => {
   const { studentsStore } = useStores();
   const [selectedStudent, setSelectedStudent] = useState<Student | undefined>(undefined);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [isFormEmpty, setFormEmpty] = useState(true);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isViewMode, setViewMode] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/students');
+        studentsStore.list = response.data;
+      } catch (error) {
+        console.error('Ошибка при выполнении запроса', error);
+      }
+    };
+
+    fetchData();
+  }, [studentsStore]);
 
   const handleButtonClick = () => {
     setSelectedStudent(undefined);
-    setFormEmpty(true);
+    setViewMode(false);
     setDrawerOpen(true);
   };
 
-  const handleDataSubmit = (data: Student) => {
+  const handleDataSubmit = async (data: Student) => {
     const studentData = { ...data };
 
     if (selectedStudent) {
-      updateStudent(studentData);
+      await updateStudent(studentData);
     } else {
-      createStudent(studentData);
+      await createStudent(studentData);
     }
 
     setDrawerOpen(false);
+    setViewMode(false);
   };
 
   const createStudent = async (data: Student) => {
@@ -64,34 +77,17 @@ const ExamplePage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/students');
-        studentsStore.list = response.data;
-      } catch (error) {
-        console.error('Ошибка при выполнении запроса', error);
-      }
-    };
-
-    fetchData();
-  }, [studentsStore]);
-
-  const handleEditClick = (student: Student) => {
-    if (student && selectedStudent) {
-      setFormEmpty(false);
+  const handleDropdownOptionSelect = (option: string, student: Student) => {
+    if (option === 'Открыть') {
+      setSelectedStudent(student);
+      setViewMode(true);
       setDrawerOpen(true);
+    } else if (option === 'Удалить') {
+      handleDeleteClick(student);
     }
   };
 
-  const handleDeleteClick = (student: Student) => {
-    if (student) {
-      setDrawerOpen(false);
-      deleteStudent(student);
-    }
-  };
-
-  const deleteStudent = async (student: Student) => {
+  const handleDeleteClick = async (student: Student) => {
     try {
       const response = await axios.delete(`http://localhost:3000/students/${student.id}`);
 
@@ -106,10 +102,6 @@ const ExamplePage: React.FC = () => {
     }
   };
 
-  const handleDropdownClick = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
-
   return (
     <>
       {isDrawerOpen && (
@@ -122,7 +114,8 @@ const ExamplePage: React.FC = () => {
             // @ts-ignore
             onDataSubmit={handleDataSubmit}
             // @ts-ignore
-            selectedValue={isFormEmpty ? undefined : selectedStudent}
+            selectedValue={selectedStudent}
+            isReadOnly={isViewMode}
           />
         </Drawer>
       )}
@@ -139,10 +132,7 @@ const ExamplePage: React.FC = () => {
             { key: 'groupName', name: 'Наименование группы', width: 300 },
             { key: 'address', name: 'Адрес' },
           ]}
-          onRowEdit={(student) => handleEditClick(student)}
-          onRowDelete={(student) => handleDeleteClick(student)}
-          isDropdownOpen={isDropdownOpen}
-          onDropdownClick={handleDropdownClick}
+          onDropdownOptionSelect={handleDropdownOptionSelect}
         />
       )}
     </>

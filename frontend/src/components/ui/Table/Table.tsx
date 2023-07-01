@@ -4,31 +4,15 @@ import DropdownMenu from '../DropdownMenu/DropdownMenu';
 interface TableProps<T> {
   headers: { key: keyof T; name: string; width?: number }[];
   data: T[];
-  onRowClick?: (row: T) => void;
-  onRowEdit?: (row: T) => void;
-  onRowDelete?: (row: T) => void;
-  isDropdownOpen?: boolean;
-  onDropdownClick?: () => void;
+  onDropdownOptionSelect: (option: string, row: T) => void;
 }
 
-const Table = <T,>({ data, headers, onRowClick, onRowEdit, onRowDelete }: TableProps<T>): React.ReactElement => {
+const Table = <T,>({ data, headers, onDropdownOptionSelect }: TableProps<T>): React.ReactElement => {
   const headsRef = useRef<HTMLTableRowElement>(null);
 
-  const handleRowClick = (row: T) => {
-    if (onRowClick) {
-      onRowClick(row);
-    }
-  };
-
-  const handleRowEdit = (row: T) => {
-    if (onRowEdit) {
-      onRowEdit(row);
-    }
-  };
-
-  const handleRowDelete = (row: T) => {
-    if (onRowDelete) {
-      onRowDelete(row);
+  const handleDropdownOptionClick = (option: string, row: T) => {
+    if (onDropdownOptionSelect) {
+      onDropdownOptionSelect(option, row);
     }
   };
 
@@ -54,17 +38,16 @@ const Table = <T,>({ data, headers, onRowClick, onRowEdit, onRowDelete }: TableP
         <tbody>
           {data.length ? (
             data.map((item, index) => (
-              <tr key={`${index}_${String(item[headers[0].key])}`} onClick={() => handleRowClick(item)}>
+              <tr key={`${index}_${String(item[headers[0].key])}`}>
                 {headers.map((header) => (
                   <td key={`${String(header.key)}_${String(item[headers[0].key])}`} className="py-2 px-4 border">
                     {String(item[header.key])}
                   </td>
                 ))}
-                <td className='p-0'>
+                <td className="p-0">
                   <DropdownMenu
-                    onViewClick={() => handleRowEdit(item)}
-                    onEditClick={() => handleRowEdit(item)}
-                    onDeleteClick={() => handleRowDelete(item)}
+                    onOptionSelect={(option) => handleDropdownOptionClick(option, item)}
+                    row={item}
                   />
                 </td>
               </tr>

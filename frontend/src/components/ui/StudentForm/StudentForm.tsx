@@ -15,6 +15,7 @@ export interface FormData {
 export interface StudentFormProps {
   selectedValue?: SelectOption;
   onDataSubmit?: (data: FormData) => void;
+  isReadOnly?: boolean;
 }
 
 const options = [
@@ -23,7 +24,7 @@ const options = [
   { id: '3', title: 'Frontend-323' },
 ];
 
-const StudentForm: React.FC<StudentFormProps> = ({ selectedValue, onDataSubmit }) => {
+const StudentForm: React.FC<StudentFormProps> = ({ selectedValue, onDataSubmit, isReadOnly }) => {
   const [data, setData] = useState<FormData>({});
 
   useEffect(() => {
@@ -34,12 +35,14 @@ const StudentForm: React.FC<StudentFormProps> = ({ selectedValue, onDataSubmit }
   }, [selectedValue]);
 
   const onInputHandler = useCallback((e: React.FormEvent<HTMLFormElement>) => {
-    const target = e.target as HTMLInputElement;
-    setData((prevData) => ({
-      ...prevData,
-      [target.id as keyof FormData]: target.value,
-    }));
-  }, []);
+    if (!isReadOnly) {
+      const target = e.target as HTMLInputElement;
+      setData((prevData) => ({
+        ...prevData,
+        [target.id as keyof FormData]: target.value,
+      }));
+    }
+  }, [isReadOnly]);
 
   const onSubmitHandler: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -52,34 +55,34 @@ const StudentForm: React.FC<StudentFormProps> = ({ selectedValue, onDataSubmit }
   };
 
   return (
-    <form
-      action="#"
-      onInput={onInputHandler}
-      onSubmit={onSubmitHandler}
-    >
+    <form action="#" onInput={onInputHandler} onSubmit={onSubmitHandler}>
       <Input
         className="mb-2"
         id="name"
         label="Your name"
         value={data.name || ''}
+        readOnly={isReadOnly}
       />
       <Input
         className="mb-2"
         id="surname"
         label="Your surname"
         value={data.surname || ''}
+        readOnly={isReadOnly}
       />
       <Input
         className="mb-2"
         id="address"
         label="Your address"
         value={data.address || ''}
+        readOnly={isReadOnly}
       />
       <Input
         className="mb-2"
         id="age"
         label="Your age"
         value={data.age?.toString() || ''}
+        readOnly={isReadOnly}
       />
       <Select
         className="mb-2"
@@ -87,8 +90,11 @@ const StudentForm: React.FC<StudentFormProps> = ({ selectedValue, onDataSubmit }
         onSelect={(option) => setData({ ...data, groupName: option?.title })}
         options={options}
         selectedOption={selectedValue}
+        disabled={isReadOnly}
       />
-      <Button type="submit">Submit form</Button>
+      {!isReadOnly && (
+        <Button type="submit">Submit form</Button>
+      )}
     </form>
   );
 };
