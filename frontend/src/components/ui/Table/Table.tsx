@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import DropdownMenu from '../Dropdown/DropdownMenu';
 import { RiEyeLine, RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
 
 interface TableProps<T> {

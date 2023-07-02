@@ -1,19 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, RefObject } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-
-interface DropDownItem {
-  text: string;
-  icon: React.ReactNode;
-}
+import DropdownMenuItem, { DropdownMenuItemProps } from './DropdownMenuItem';
 
 interface DropdownMenuProps {
-  items: DropDownItem[];
+  items: Omit<DropdownMenuItemProps, 'onItemClick'>[];
   onOptionSelect?: (option: string) => void;
 }
 
-const DropdownMenu = ({ items, onOptionSelect }: DropdownMenuProps) => {
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLUListElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleToggleMenu = () => {
     setIsOpen(!isOpen);
@@ -50,23 +46,19 @@ const DropdownMenu = ({ items, onOptionSelect }: DropdownMenuProps) => {
         <BiDotsHorizontalRounded className="text-gray-400" size={18} />
       </button>
       {isOpen && (
-        <ul
-          ref={menuRef}
+        <div
+          ref={menuRef as RefObject<HTMLDivElement>}
           className="absolute right-0 z-10 w-60 py-2 mb-2 mt-2 bg-white rounded-md shadow-lg"
         >
-          {items.map((item, index) => (
-            <li key={index}>
-              <button
-                type="button"
-                className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
-                onClick={() => handleItemClick(item.text)}
-              >
-                {item.icon}
-                {item.text}
-              </button>
-            </li>
+          {items.map(({ icon, text }, index) => (
+            <DropdownMenuItem
+              key={index}
+              icon={icon}
+              text={text}
+              onItemClick={handleItemClick}
+            />
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
