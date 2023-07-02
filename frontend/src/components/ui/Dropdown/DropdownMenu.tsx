@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, RefObject } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import DropdownMenuItem, { DropdownMenuItemProps } from './DropdownMenuItem';
+import IconButton from '../IconButton/IconButton';
 
 interface DropdownMenuProps {
   items: Omit<DropdownMenuItemProps, 'onItemClick'>[];
@@ -38,13 +39,12 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) =>
 
   return (
     <div className="relative inline-flex">
-      <button
-        type="button"
-        className="flex items-center justify-center py-2 w-10 h-10 focus:outline-none bg-gray-200"
+      <IconButton
+        variant="outline"
+        size="sm"
         onClick={handleToggleMenu}
-      >
-        <BiDotsHorizontalRounded className="text-gray-400" size={18} />
-      </button>
+        icon={<BiDotsHorizontalRounded />}
+      />
       {isOpen && (
         <div
           ref={menuRef as RefObject<HTMLDivElement>}
