@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, RefObject } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import DropdownMenuItem, { DropdownMenuItemProps } from './DropdownMenuItem';
 import IconButton from '../IconButton/IconButton';
+import { useOnClickOutside, useToggle } from 'usehooks-ts';
 
 interface DropdownMenuProps {
   items: Omit<DropdownMenuItemProps, 'onItemClick'>[];
@@ -9,45 +10,27 @@ interface DropdownMenuProps {
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, toggleIsOpen] = useToggle();
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const handleToggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  
+  useOnClickOutside(menuRef, toggleIsOpen)
 
   const handleItemClick = (option: string) => {
-    setIsOpen(false);
-    if (onOptionSelect) {
-      onOptionSelect(option);
-    }
+    toggleIsOpen();
+    onOptionSelect?.(option);
   };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   return (
     <div className="relative inline-flex">
       <IconButton
         variant="outline"
         size="sm"
-        onClick={handleToggleMenu}
+        onClick={toggleIsOpen}
         icon={<BiDotsHorizontalRounded />}
       />
       {isOpen && (
         <div
-          ref={menuRef as RefObject<HTMLDivElement>}
+          ref={menuRef}
           className="absolute right-0 z-10 w-60 py-2 mb-2 mt-2 bg-white rounded-md shadow-lg"
         >
           {items.map(({ icon, text }, index) => (
