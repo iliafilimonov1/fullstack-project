@@ -51,7 +51,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
       >
         <input
           ref={ref}
-          className={`input ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className || ''}`}
+          className={`input 
+          ${disabled || readOnly ? 'opacity-50 cursor-not-allowed' : ''} 
+          ${className || ''}`}
           disabled={disabled}
           id={id}
           onBlur={onBlur}

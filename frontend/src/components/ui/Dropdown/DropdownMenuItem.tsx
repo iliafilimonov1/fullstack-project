@@ -9,7 +9,7 @@ export interface DropdownMenuItemProps {
 const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({ text, icon, onItemClick }) => {
   return (
     <div
-      className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
+      className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100 cursor-pointer"
       onClick={() => onItemClick?.(text)}
     >
       {icon}
