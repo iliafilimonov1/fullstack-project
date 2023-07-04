@@ -3,7 +3,7 @@ import DropdownMenu from '../Dropdown/DropdownMenu';
 import { RiEyeLine, RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
 
 interface TableProps<T> {
-  headers: { key: keyof T; name: string; width?: number }[];
+  headers: { key: keyof T; name?: string; width?: number }[];
   data: T[];
   onDropdownOptionSelect: (option: string, row: T) => void;
   emptyMessage?: string;

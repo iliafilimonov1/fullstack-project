@@ -1,10 +1,6 @@
 import React from 'react';
+import { DropdownMenuItemProps } from './types';
 
-export interface DropdownMenuItemProps {
-  text: string;
-  icon?: React.ReactNode;
-  onItemClick?: (option: string) => void;
-}
 
 const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({ text, icon, onItemClick }) => {
   return (

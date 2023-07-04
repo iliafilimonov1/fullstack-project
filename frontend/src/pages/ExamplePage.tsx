@@ -142,6 +142,9 @@ const ExamplePage: React.FC = () => {
             { key: 'age', name: 'Возраст', width: 120 },
             { key: 'groupName', name: 'Наименование группы', width: 300 },
             { key: 'address', name: 'Адрес' },
+            // TODO Надо как-то в пропсы таблицы закинуть дропдаун. К примеру:
+            // {key: 'dropdown', component: <div>Это должно отрисоваться в ячейке</div>}
+            { key: 'dropdown' },
           ]}
           onDropdownOptionSelect={handleDropdownOptionSelect}
         />
