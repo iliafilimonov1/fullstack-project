@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, RefObject } from 'react';
+import React, { useRef } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import DropdownMenuItem, { DropdownMenuItemProps } from './DropdownMenuItem';
-import IconButton from '../IconButton/IconButton';
 import { useOnClickOutside, useToggle } from 'usehooks-ts';
+import Button from '../Button/Button';
 
 interface DropdownMenuProps {
   items: Omit<DropdownMenuItemProps, 'onItemClick'>[];
@@ -22,9 +22,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) =>
 
   return (
     <div className="relative inline-flex">
-      <IconButton
-        variant="outline"
-        size="sm"
+      <Button
+        variant="secondary"
         onClick={toggleIsOpen}
         icon={<BiDotsHorizontalRounded />}
       />
