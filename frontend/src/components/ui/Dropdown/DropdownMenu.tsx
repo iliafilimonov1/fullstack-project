@@ -1,13 +1,10 @@
 import React, { useRef } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import DropdownMenuItem, { DropdownMenuItemProps } from './DropdownMenuItem';
+import DropdownMenuItem from './DropdownMenuItem';
 import { useOnClickOutside, useToggle } from 'usehooks-ts';
 import Button from '../Button/Button';
+import { DropdownMenuProps } from './types';
 
-interface DropdownMenuProps {
-  items: Omit<DropdownMenuItemProps, 'onItemClick'>[];
-  onOptionSelect?: (option: string) => void;
-}
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) => {
   const [isOpen, toggleIsOpen] = useToggle();
