@@ -137,14 +137,11 @@ const ExamplePage: React.FC = () => {
         <Table
           data={studentsStore.list}
           headers={[
-            { key: 'name', name: 'Имя', width: 120 },
-            { key: 'surname', name: 'Фамилия', width: 120 },
-            { key: 'age', name: 'Возраст', width: 120 },
-            { key: 'groupName', name: 'Наименование группы', width: 300 },
+            { key: 'name', name: 'Имя' },
+            { key: 'surname', name: 'Фамилия' },
+            { key: 'age', name: 'Возраст' },
+            { key: 'groupName', name: 'Наименование группы' },
             { key: 'address', name: 'Адрес' },
-            // TODO Надо как-то в пропсы таблицы закинуть дропдаун. К примеру:
-            // {key: 'dropdown', component: <div>Это должно отрисоваться в ячейке</div>}
-            { key: 'dropdown' },
           ]}
           onDropdownOptionSelect={handleDropdownOptionSelect}
         />

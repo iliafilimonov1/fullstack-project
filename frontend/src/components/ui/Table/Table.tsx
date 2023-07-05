@@ -1,71 +1,51 @@
-import React, { useRef } from 'react';
-import DropdownMenu from '../Dropdown/DropdownMenu';
-import { RiEyeLine, RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
+import React from 'react';
+import TableRow from './TableRow';
+
+interface TableCell<T> {
+  key: keyof T;
+  name?: string;
+}
 
 interface TableProps<T> {
-  headers: { key: keyof T; name?: string; width?: number }[];
+  headers: TableCell<T>[];
   data: T[];
   onDropdownOptionSelect: (option: string, row: T) => void;
   emptyMessage?: string;
 }
 
-const Table = ({ data, headers, onDropdownOptionSelect, emptyMessage }: TableProps<any>): React.ReactElement => {
-  const headsRef = useRef<HTMLTableRowElement>(null);
-
-  const handleDropdownOptionClick = (option: string, row: any) => {
-    if (onDropdownOptionSelect) {
-      onDropdownOptionSelect(option, row);
-    }
-  };
-
-  const dropDownItems = [
-    { text: 'Открыть', icon: <RiEyeLine className="text-gray-600 mr-2 w-4" size={18} /> },
-    { text: 'Редактировать', icon: <RiEdit2Line className="text-gray-600 mr-2 w-4" size={18} /> },
-    { text: 'Удалить', icon: <RiDeleteBinLine className="text-gray-600 mr-2 w-4" size={18} /> },
-  ];
-
+const Table = <T extends object>({ data, headers, onDropdownOptionSelect, emptyMessage }: TableProps<T>): React.ReactElement => {
   return (
-    <table className="w-full border-collapse">
-      <colgroup>
+    <div className="w-full">
+      <div className="flex flex-row">
         {headers.map((header) => (
-          <col key={String(header.key)} style={{ width: header.width }} />
+          <div
+            key={String(header.key)}
+            className="py-2 px-4 font-medium cursor-move bg-blue-200 text-blue-500 border border-blue-500"
+          >
+            {header.name}
+          </div>
         ))}
-      </colgroup>
-      <thead>
-        <tr ref={headsRef}>
-          {headers.map((header) => (
-            <th
-              key={String(header.key)}
-              className="py-2 px-4 font-medium cursor-move bg-blue-200 text-blue-500 border border-blue-500"
-            >
-              {header.name}
-            </th>
-          ))}
-          <th className="py-2 px-4"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((item, index) => (
-          <tr key={`${index}`}>
-            {headers.map((header) => (
-              <td key={`${String(header.key)}_${index}`} className="py-2 px-4 border">
-                {String(item[header.key])}
-              </td>
-            ))}
-            <td className="p-0">
-              <DropdownMenu items={dropDownItems} onOptionSelect={(option) => handleDropdownOptionClick(option, item)} />
-            </td>
-          </tr>
-        ))}
-        {data.length === 0 && (
-          <tr>
-            <td className="py-2 px-4 text-center border" colSpan={headers.length + 1}>
-              {emptyMessage || 'Таблица пуста'}
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+        <div className="py-2 px-4 flex-grow"></div>
+      </div>
+      {data.length > 0 ? (
+        data.map((item, index) => (
+          <TableRow<T>
+            key={`${index}`}
+            rowData={item}
+            onDropdownOptionSelect={onDropdownOptionSelect}
+          />
+        ))
+      ) : (
+        <div className="flex flex-row">
+          <div
+            className="py-2 px-4 text-center border"
+            style={{ gridColumn: `1 / span ${headers.length + 1}` }}
+          >
+            {emptyMessage || 'Таблица пуста'}
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
