@@ -8,27 +8,26 @@ import { Student } from 'src/items/interfaces/student.interface';
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
-  // Обработчик GET запроса для получения всех студентов
   @Get()
-  getAllStudents(): Student[] {
+  async getAllStudents(): Promise<Student[]> {
     return this.studentsService.getAllStudents();
   }
 
-  // Обработчик POST запроса для создания студента
   @Post()
-  createStudent(@Body() studentDto: StudentDto) {
+  async createStudent(@Body() studentDto: StudentDto): Promise<Student> {
     return this.studentsService.createStudent(studentDto);
   }
 
-  // Обработчик PUT запроса для обновления студента
   @Put(':id')
-  updateStudent(@Param('id') id: string, @Body() studentDto: StudentDto) {
+  async updateStudent(
+    @Param('id') id: string,
+    @Body() studentDto: StudentDto,
+  ): Promise<Student> {
     return this.studentsService.updateStudent(id, studentDto);
   }
 
-  // Обработчик DELETE запроса для удаления студента
   @Delete(':id')
-  deleteStudent(@Param('id') id: string) {
+  async deleteStudent(@Param('id') id: string): Promise<void> {
     return this.studentsService.deleteStudent(id);
   }
 }
