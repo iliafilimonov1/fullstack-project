@@ -1,54 +1,36 @@
 import { Injectable, Logger  } from '@nestjs/common';
 import { StudentDto } from '../dtos/student.dto';
 import { Student } from '../items/interfaces/student.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class StudentsService {
   private students: Student[] = [];
+  constructor(
+    @InjectModel('Student') private readonly studentModel: Model<Student>,
+  ) {}
   private logger = new Logger(StudentsService.name); // логгер для вывода записей
 
 
-  getAllStudents(): Student[] {
-    return this.students;
+  async getAllStudents(): Promise<Student[]> {
+    return this.studentModel.find().exec();
   }
 
 
-  createStudent(studentDto: StudentDto): Student {
-    const newStudent: Student = {
-      id: this.generateUniqueId(),
-      ...studentDto,
-    };
-
-    this.students.push(newStudent);
-    this.logStudents();
-    return newStudent;
+  async createStudent(studentDto: StudentDto): Promise<Student> {
+    const newStudent = new this.studentModel(studentDto);
+    return newStudent.save();
   }
 
 
-  updateStudent(id: string, studentDto: StudentDto): Student {
-    const studentIndex = this.students.findIndex((student) => student.id === id);
-
-    if (studentIndex >= 0) {
-      const updatedStudent: Student = {
-        id,
-        ...studentDto,
-      };
-
-      this.students[studentIndex] = updatedStudent;
-      return updatedStudent;
-    }
-
-    return null;
+  async updateStudent(id: string, studentDto: StudentDto): Promise<Student> {
+    return this.studentModel.findByIdAndUpdate(id, studentDto, { new: true });
   }
 
 
-  deleteStudent(id: string): void {
-    const studentIndex = this.students.findIndex((student) => student.id === id);
-
-    if (studentIndex >= 0) {
-      this.logStudents();
-      this.students.splice(studentIndex, 1);
-    }
+  async deleteStudent(id: string): Promise<void> {
+    await this.studentModel.findByIdAndDelete(id);
   }
   
 

@@ -1,16 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from '../controllers/app.controller';
-import { AppService } from '../services/app.service';
-import { ItemsController } from '../items/items.controller';
-import { ItemsService } from '../items/items.service';
+import { MongooseModule } from '@nestjs/mongoose';
 import { StudentsController } from 'src/controllers/students.controller';
 import { StudentsService } from 'src/services/students.service';
+import { StudentSchema } from 'src/schemas/student.model';
+import { config } from 'dotenv';
+config();
 
 @Module({
-  // Контроллеры, которые будут обрабатывать HTTP-запросы
-  controllers: [AppController, ItemsController, StudentsController],
-  // Сервисы, которые должны быть доступны в данном модуле
-  providers: [AppService, ItemsService, StudentsService],
+  imports: [
+    MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forFeature([{ name: 'Student', schema: StudentSchema }]),
+  ],
+  controllers: [StudentsController],
+  providers: [StudentsService],
 })
 
 
