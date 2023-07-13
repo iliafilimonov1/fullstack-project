@@ -5,10 +5,13 @@ FROM node:14-alpine
 WORKDIR /backend
 
 # Копируем package.json и package-lock.json
-COPY package*.json ./
+COPY package.json package-lock.json ./
+
+# Удаляем папку node_modules (если существует)
+RUN rm -rf node_modules
 
 # Устанавливаем зависимости
-RUN npm ci --only=production
+RUN npm install --silent
 
 # Копируем исходный код
 COPY . .

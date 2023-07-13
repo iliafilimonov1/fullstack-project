@@ -1,11 +1,11 @@
 import Button from '@/components/ui/Button/Button';
 import Modal from '@/components/ui/Modal/Modal';
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useCallback, createRef } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import { useToggle } from 'usehooks-ts';
 
 const ReactAvatarEdit: React.FC = () => {
-  const ref = useRef<AvatarEditor>();
+  const ref = createRef<AvatarEditor>();
   const [showModal, toggleShowModal] = useToggle();
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
@@ -15,11 +15,16 @@ const ReactAvatarEdit: React.FC = () => {
   const saveHandler = useCallback(() => {
     if (ref.current) {
       const canvas = ref.current.getImage();
-      canvas.toBlob((blob: Blob) => {
-        const result = new Blob([blob], { type: 'image/jpeg' });
-        /** Здесь нужен вызов callback */
-        return result;
-      }, 'image/jpeg');
+
+      if (canvas) {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const result = new Blob([blob], { type: 'image/jpeg' });
+            /** Здесь нужен вызов callback */
+            return result;
+          }
+        }, 'image/jpeg');
+      }
     }
     return undefined;
   }, []);

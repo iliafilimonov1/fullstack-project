@@ -123,16 +123,6 @@ const ExamplePage: React.FC = () => {
       <Button onClick={handleButtonClick} type="submit">
         Добавить студента
       </Button>
-      <Button variant='secondary' prefix={<BiDotsHorizontalRounded />} type="submit">
-        Prefix
-      </Button>
-      <Button variant='secondary' suffix={<BiDotsHorizontalRounded />} type="submit">
-        Suffix
-      </Button>
-      <Button variant='secondary' icon={<BiDotsHorizontalRounded />} type="submit"></Button>
-      <Button onClick={handleButtonClick} variant="primary" size="md" isLoading={true}>
-        Loading
-      </Button>
       {!!studentsStore.list?.length && (
         <Table
           data={studentsStore.list}
