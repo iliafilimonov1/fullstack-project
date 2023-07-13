@@ -2,30 +2,41 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext", "es6"],
-    "allowJs": true,
-    "skipLibCheck": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
+    "noEmit": false,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
-    "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@components": ["./src/components"],
-      "@assets": ["./src/assets"]
-    }
+      "@/*": [
+        "./src/*"
+      ],
+      "@components": [
+        "./src/components"
+      ],
+      "@assets": [
+        "./src/assets"
+      ]
+    },
+    "allowJs": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "isolatedModules": true
   },
-  // Включаемые файлы
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  // Исключаемые файлы
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
   "exclude": [
     "**/*.test.ts",
     "**/*.spec.ts",
@@ -33,11 +44,5 @@
     "**/*.spec.tsx",
     "node_modules"
   ],
-  // Файлы, включаемые в проект
-  "files": [
-    "./typings/index.d.ts"
-  ],
-  // Отключить компиляцию при сохранении
   "compileOnSave": false
 }
-

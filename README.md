@@ -33,3 +33,19 @@
   ```bash
   npm run dev
   ```
+
+  ## Run in Docker
+
+- Install [Docker](https://docs.docker.com/get-docker/)
+- Install [Docker Compose](https://docs.docker.com/compose/install/)
+
+Docker commands are in `Makefile`
+
+```sh
+# Run docker-compose
+make up
+# Rebuild docker-compose
+make rebuild
+# Down docker-compose
+make down
+```

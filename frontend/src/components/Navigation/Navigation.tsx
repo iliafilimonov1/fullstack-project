@@ -10,11 +10,8 @@ import { NavItem } from './types';
 /** Элементы навишации */
 const navItems: NavItem[] = [
   { label: 'Home', link: '/', icon: <AiFillFilePdf /> },
-  { label: 'ReactPdfPage', link: '/ReactPdfPage' },
   { label: 'Example Page', link: '/ExamplePage' },
-  { label: 'Tesseract', link: '/Tesseract' },
   { label: 'Framer-motion', link: '/FramerMotion' },
-  { label: 'NASAApi', link: '/NasaApi' },
   { label: 'Frameworks', link: '/Frameworks' },
 ];
 

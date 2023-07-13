@@ -1,4 +1,4 @@
-import BaseViewModel from '@/store/BaseStore/BaseViewModel';
+import BaseViewModel from '../store/BaseViewModel/BaseViewModel';
 
 export function required<T extends BaseViewModel<T>>(
   _: T,
