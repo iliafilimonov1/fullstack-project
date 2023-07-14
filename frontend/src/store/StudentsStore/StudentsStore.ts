@@ -1,5 +1,4 @@
 import { runInAction } from 'mobx';
-import { studentsMoc } from '@/mocs/mocs';
 import BaseListStore from '../BaseListStore/BaseListStore';
 import { Student } from '../StudentStore/types';
 
@@ -11,7 +10,7 @@ class StudentsStore extends BaseListStore<Student> {
   public fetch() {
     this.runWithStateControl(async () => {
       runInAction(() => {
-        this.list = studentsMoc;
+        this.list = [];
       });
     });
   }

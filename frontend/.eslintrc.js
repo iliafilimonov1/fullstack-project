@@ -29,7 +29,6 @@ module.exports = {
     'react',
     '@typescript-eslint',
     'import',
-    'react-hooks'
   ],
   rules: {
     'no-unused-vars': 'off',
