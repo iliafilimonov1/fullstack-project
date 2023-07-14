@@ -7,7 +7,7 @@ import Button from '../components/ui/Button/Button';
 import Drawer from '../components/ui/Drawer/Drawer';
 import StudentForm from '../components/ui/StudentForm/StudentForm';
 import axios from 'axios';
-import { BiDotsHorizontalRounded } from 'react-icons/bi';
+// import { BiDotsHorizontalRounded } from 'react-icons/bi';
 
 const ExamplePage: React.FC = () => {
   const { studentsStore } = useStores();
