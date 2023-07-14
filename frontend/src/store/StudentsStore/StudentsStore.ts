@@ -22,9 +22,9 @@ class StudentsStore extends BaseListStore<Student> {
     const preparedStudent = {
       ...data,
       id: `${(new Date()).toISOString()}_${Math.random() * 10}`,
-    };
+    }as Student;
     runInAction(() => {
-      this.list = [...this.list ?? [], preparedStudent];
+      this.list = [...(this.list ?? []), preparedStudent];
     });
   }
 
