@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app.module';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true }); // Создаем экземпляр Nest приложения
-  
+async function template() {
+  const app = await NestFactory.create(AppModule, { cors: true }); // Создание экземпляра приложения
+
   const PORT = process.env.PORT || 3000; // Порт сервера
 
   await app.listen(PORT); // Запуск приложения
 }
 
-bootstrap();
+template();
 
