@@ -7,6 +7,7 @@ export interface SelectProps {
   options: SelectOption[];
   onSelect?: (value: SelectOption) => void;
   selectedOption?: SelectOption;
+  defaultValue?: SelectOption | null;
   disabled?: boolean;
   label?: string;
   className?: string;

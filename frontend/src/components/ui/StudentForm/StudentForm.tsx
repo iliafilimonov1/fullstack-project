@@ -89,6 +89,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ selectedValue, onDataSubmit, 
         label="Group name"
         onSelect={(option) => setData({ ...data, groupName: option?.title })}
         options={options}
+        defaultValue={options[0]} 
         selectedOption={selectedValue}
         disabled={isReadOnly}
       />

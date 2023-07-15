@@ -4,6 +4,11 @@
 
 ### Backend
 
+- Install pnpm globally
+  - From [website](https://pnpm.io/installation#using-npm)
+  ```bash
+  npm install -g pnpm
+  ```
 - Install Node.js
   - Recomended version - 14.8 LTS
   - From [website](https://nodejs.org/en/)
@@ -11,15 +16,20 @@
 - Install dependencies
   ```bash
   cd backend
-  npm install
+  pnpm install
   ```
 - Run server
   ```bash
-  npm run start
+  pnpm run start
   ```
 
 ### Frontend
 
+- Install pnpm globally
+  - From [website](https://pnpm.io/installation#using-npm)
+  ```bash
+  npm install -g pnpm
+  ```
 - Install Node.js
   - Recomended version - 14.8 LTS
   - From [website](https://nodejs.org/en/)
@@ -27,11 +37,11 @@
 - Install dependencies
   ```bash
   cd frontend
-  npm install
+  pnpm install
   ```
 - Run server
   ```bash
-  npm run dev
+  pnpm run dev
   ```
 
   ## Run in Docker
