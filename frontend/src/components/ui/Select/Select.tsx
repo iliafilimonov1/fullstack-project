@@ -7,7 +7,7 @@ import Input from '../Input/Input';
 import { SelectOption, SelectProps } from './types';
 
 const Select: React.FC<SelectProps> = ({
-  options, onSelect, selectedOption, disabled, label, className,
+  options, onSelect, selectedOption, disabled, label, className, defaultValue
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -89,11 +89,8 @@ const Select: React.FC<SelectProps> = ({
 
   useEffect(() => {
     setSelectedIndex(options.findIndex((option) => option.title === selectedOption?.title) || null);
-  }, [selectedOption, options]);
-
-  useEffect(() => {
-    setSelectedValue(selectedOption || null);
-  }, [selectedOption]);
+    setSelectedValue(selectedOption || defaultValue || null);
+  }, [options, selectedOption, defaultValue]);
 
   return (
     <div>
