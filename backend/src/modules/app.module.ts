@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StudentsController } from 'src/controllers/students.controller';
 import { StudentsService } from 'src/services/students.service';
+import { UserSchema } from 'src/schemas/user.model';
 import { StudentSchema } from 'src/schemas/student.model';
+import { ManagerSchema } from 'src/schemas/manager.model';
+import { TeacherSchema } from 'src/schemas/teacher.model';
 import { SpecializationSchema } from '../schemas/specialization.model';
 import { config } from 'dotenv';
 config();
@@ -11,8 +14,11 @@ config();
   imports: [
     MongooseModule.forRoot(process.env.MONGODB_URI),
     MongooseModule.forFeature([
-      { name: 'Student', schema: StudentSchema },
-      { name: 'Specialization', schema: SpecializationSchema },
+      { name: 'User', schema: UserSchema, collection: 'users' },
+      { name: 'Student', schema: StudentSchema, collection: 'students' },
+      { name: 'Manager', schema: ManagerSchema, collection: 'managers' },
+      { name: 'Teacher', schema: TeacherSchema, collection: 'teachers' },
+      { name: 'Specialization', schema: SpecializationSchema, collection: 'specializations' },
     ]),
   ],
   controllers: [StudentsController],

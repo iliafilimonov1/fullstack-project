@@ -3,13 +3,13 @@ import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-interface Address {
+export interface Address {
   street: string;
   suite: string;
   city: string;
 }
 
-interface Company {
+export interface Company {
   name: string;
   position: string;
 }
