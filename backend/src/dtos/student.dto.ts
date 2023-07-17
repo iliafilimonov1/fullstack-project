@@ -1,8 +1,9 @@
-// Свойства, которые можно использовать для передачи данных по студентам
+import { Teacher } from './../schemas/teacher.model';
+import { Course } from '../schemas/course.model';
+
 export class StudentDto {
-  name: string;
-  surname: string;
-  groupName?: string;
-  address?: string;
-  age: number;
+  specializationId: string;
+  groupNumber: string;
+  teachers: Teacher[];
+  courses: Course[];
 }
