@@ -1,21 +1,34 @@
-import { Schema, Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { User } from './user.model';
+import { Teacher } from './teacher.model';
+import { Course } from './course.model';
+import { Types } from 'mongoose';
 
-// Интерфейс представляющий модель студента в бд
-export interface Student extends Document {
-  name: string;
-  surname: string;
-  specializationId?: string;
-  groupName?: string;
-  address?: string;
-  age: number;
+@Schema()
+export class Student extends User {
+  /**
+   * id специализации, к которой относится студент.
+   */
+  @Prop({ type: Types.ObjectId, ref: 'Specialization' })
+  specializationId: string;
+
+  /**
+   * Номер группы, в которой учится студент.
+   */
+  @Prop({ required: true })
+  groupNumber: string;
+
+  /**
+   * Список преподавателей, преподающих студенту.
+   */
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Teacher' }] })
+  teachers: Teacher[];
+
+  /**
+   * Список курсов, которые посещает студент.
+   */
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Course' }] })
+  courses: Course[];
 }
 
-// Схема для модели студента в бд
-export const StudentSchema = new Schema<Student>({
-  name: { type: String, required: true },
-  surname: { type: String, required: true },
-  specializationId: { type: String, ref: 'Specialization', required: false },
-  groupName: { type: String, required: false },
-  address: { type: String, required: false },
-  age: { type: Number, required: false },
-});
+export const StudentSchema = SchemaFactory.createForClass(Student);
