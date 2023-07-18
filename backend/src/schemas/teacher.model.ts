@@ -9,9 +9,12 @@ import { TeacherDto } from 'src/dtos/teacher.dto';
  */
 @Schema()
 export class Teacher extends User {
+  save(): Teacher | PromiseLike<Teacher> {
+    throw new Error('Method not implemented.');
+  }
   /**
    * Конструктор класса Teacher.
-   * @param {TeacherDto} userDto - DTO преподавателя.
+   * @param {TeacherDto} userDto - dto преподавателя.
    */
   constructor(userDto: TeacherDto) {
     super(userDto);

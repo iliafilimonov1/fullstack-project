@@ -9,7 +9,7 @@ import { StudentDto } from 'src/dtos/student.dto';
 export class Student extends User {
   /**
    * Конструктор класса Student.
-   * @param {StudentDto} userDto - DTO студента.
+   * @param {StudentDto} userDto - dto студента.
    */
   constructor(userDto: StudentDto) {
     super(userDto);

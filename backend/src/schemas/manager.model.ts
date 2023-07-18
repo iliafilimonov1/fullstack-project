@@ -5,9 +5,12 @@ import { ManagerDto } from '../dtos/manager.dto';
 
 @Schema()
 export class Manager extends User {
+  save(): Manager | PromiseLike<Manager> {
+    throw new Error('Method not implemented.');
+  }
   /**
    * Конструктор класса Manager.
-   * @param {ManagerDto} managerDto - DTO менеджера.
+   * @param {ManagerDto} managerDto - dto менеджера.
    */
   constructor(managerDto: ManagerDto) {
     super(managerDto);

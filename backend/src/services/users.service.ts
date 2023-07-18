@@ -23,7 +23,7 @@ export class UsersService {
 
   /**
    * Создание нового пользователя.
-   * @param {UserDto} userDto - DTO пользователя.
+   * @param {UserDto} userDto - dto пользователя.
    * @returns {Promise<UserI>} - Созданный пользователь.
    */
   async createUser(userDto: UserDto): Promise<UserI> {
@@ -60,7 +60,7 @@ export class UsersService {
   /**
    * Обновление информации о пользователе.
    * @param {string} id - id пользователя.
-   * @param {UserDto} userDto - DTO пользователя.
+   * @param {UserDto} userDto - dto пользователя.
    * @returns {Promise<UserI>} - Обновленный пользователь.
    */
   async updateUser(id: string, userDto: UserDto): Promise<UserI> {

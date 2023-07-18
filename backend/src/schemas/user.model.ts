@@ -139,7 +139,7 @@ export class User implements UserI {
 
   /**
    * Конструктор класса User.
-   * @param {UserDto} userDto - DTO пользователя.
+   * @param {UserDto} userDto - dto пользователя.
    */
   constructor(userDto: UserDto) {
     this.id = userDto.id;
