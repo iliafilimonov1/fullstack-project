@@ -1,4 +1,4 @@
-import { Teacher } from './../schemas/teacher.model';
+import { Teacher } from '../schemas/teacher.model';
 import { Course } from '../schemas/course.model';
 import { UserDto } from './user.dto';
 

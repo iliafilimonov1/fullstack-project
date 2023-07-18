@@ -1,4 +1,4 @@
-import { Address, Company } from './../schemas/user.model';
+import { Address, Company } from '../schemas/user.model';
 
 /**
  * DTO (Data Transfer Object) для пользователя.
