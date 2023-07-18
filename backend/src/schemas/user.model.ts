@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTypes } from 'mongoose';
 import { UserI } from '../items/interfaces/user.interface';
-import { UserDto } from 'src/dtos/user.dto';
+import { UserDto } from '../dtos/user.dto';
+import { CompanyModel } from '../schemas/company.model';
 
 export type UserDocument = User & Document;
 
@@ -109,7 +110,7 @@ export class User implements UserI {
    * @type {Address}
    * @required
    */
-  @Prop({ required: true })
+  @Prop({ required: true, type: SchemaTypes.Mixed })
   address: Address;
 
   /**
@@ -117,7 +118,7 @@ export class User implements UserI {
    * @type {Company}
    * @optional
    */
-  @Prop({ required: false })
+  @Prop({ required: false, type: CompanyModel })
   company: Company;
 
   /**

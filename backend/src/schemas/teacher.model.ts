@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Course } from '../schemas/course.model';
 import { User } from './user.model';
-import { TeacherDto } from 'src/dtos/teacher.dto';
+import { TeacherDto } from '../dtos/teacher.dto';
 
 /**
  * Модель данных для преподавателя.

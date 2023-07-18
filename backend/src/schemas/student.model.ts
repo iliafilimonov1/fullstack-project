@@ -3,7 +3,7 @@ import { User } from './user.model';
 import { Document, Types } from 'mongoose';
 import { Course } from './course.model';
 import { Teacher } from './teacher.model';
-import { StudentDto } from 'src/dtos/student.dto';
+import { StudentDto } from '../dtos/student.dto';
 
 @Schema()
 export class Student extends User {
