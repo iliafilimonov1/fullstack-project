@@ -3,11 +3,11 @@ import { User } from '../schemas/user.model';
 import { UserDto } from '../dtos/user.dto';
 import { UserI } from '../items/interfaces/user.interface';
 import { Teacher } from '../schemas/teacher.model';
-import { TeacherDto } from 'src/dtos/teacher.dto';
+import { TeacherDto } from '../dtos/teacher.dto';
 import { Manager } from '../schemas/manager.model';
-import { ManagerDto } from 'src/dtos/manager.dto';
+import { ManagerDto } from '../dtos/manager.dto';
 import { Student } from '../schemas/student.model';
-import { StudentDto } from 'src/dtos/student.dto';
+import { StudentDto } from '../dtos/student.dto';
 
 @Injectable()
 export class UsersService {
