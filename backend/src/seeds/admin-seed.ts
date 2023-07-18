@@ -31,9 +31,9 @@ async function seedAdmin() {
    * @param {Model<Document>} adminModel - Модель администратора.
    * @returns {Promise<boolean>}
    */
-  const adminExists = await checkAdminExists(AdminModel);
+  const isAdminExists = await checkAdminExists(AdminModel);
 
-  if (adminExists) {
+  if (isAdminExists) {
     console.log('Admin already exists. Skipping creation.');
     return;
   }
@@ -58,4 +58,12 @@ async function checkAdminExists(AdminModel: Model<Document>): Promise<boolean> {
   return !!admin;
 }
 
-seedAdmin().catch((error) => console.error(error));
+(async () => {
+  try {
+    await seedAdmin();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    mongoose.disconnect();
+  }
+})();
