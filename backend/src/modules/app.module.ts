@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { StudentsController } from 'src/controllers/students.controller';
-import { StudentsService } from 'src/services/students.service';
+import { UsersController } from 'src/controllers/users.controller';
+import { UsersService } from 'src/services/users.service';
 import { UserSchema } from 'src/schemas/user.model';
 import { StudentSchema } from 'src/schemas/student.model';
 import { ManagerSchema } from 'src/schemas/manager.model';
@@ -21,7 +21,7 @@ config();
       { name: 'Specialization', schema: SpecializationSchema, collection: 'specializations' },
     ]),
   ],
-  controllers: [StudentsController],
-  providers: [StudentsService],
+  controllers: [UsersController],
+  providers: [UsersService],
 })
 export class AppModule {}

@@ -1,26 +1,45 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User, UserDocument } from './user.model';
 import { Document, Types } from 'mongoose';
+import { User } from './user.model';
+import { ManagerDto } from '../dtos/manager.dto';
 
 @Schema()
 export class Manager extends User {
   /**
-   * Отдел, в котором работает менеджер.
+   * Конструктор класса Manager.
+   * @param {ManagerDto} managerDto - DTO менеджера.
    */
-  @Prop({ required: true })
-  department: string;
+  constructor(managerDto: ManagerDto) {
+    super(managerDto);
+    this.departmentName = managerDto.departmentName;
+    this.position = managerDto.position;
+    this.subordinates = managerDto.subordinates;
+  }
 
   /**
-   * Занимаемая должность менеджера.
+   * Название отдела, к которому относится менеджер.
+   * @type {string}
    */
-  @Prop({ required: true })
+  @Prop({ type: Types.ObjectId, ref: 'Department' })
+  departmentName: string;
+
+  /**
+   * Должность менеджера.
+   * @type {string}
+   */
+  @Prop()
   position: string;
 
   /**
-   * Список подчиненных сотрудников.
+   * Подчиненные менеджеру.
+   * @type {User[]}
    */
   @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
-  subordinates: UserDocument[];
+  subordinates: User[];
 }
 
+/**
+ * Схема для модели Manager.
+ * @type {import('mongoose').Schema<Manager>}
+ */
 export const ManagerSchema = SchemaFactory.createForClass(Manager);
