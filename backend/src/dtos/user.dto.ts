@@ -1,4 +1,5 @@
-import { Address, Company } from './../schemas/user.model';
+import { Company } from './../schemas/user.model';
+import { IAddress } from '../schemas/address.model';
 
 /**
  * DTO (Data Transfer Object) для пользователя.
@@ -68,7 +69,7 @@ export class UserDto {
    * Адрес пользователя.
    * @type {Address}
    */
-  address: Address;
+  address: IAddress;
 
   /**
    * Компания пользователя.
