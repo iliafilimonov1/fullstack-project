@@ -16,7 +16,7 @@ export class SpecializationsService {
 
   /**
    * Получение всех специализаций.
-   * @returns {Promise<Specialization[]>} Промис с массивом специализаций.
+   * @returns {Promise<Specialization[]>}
    */
   async getAllSpecializations(): Promise<Specialization[]> {
     return this.specializationModel.find().exec();
@@ -24,7 +24,7 @@ export class SpecializationsService {
 
   /**
    * Получение всех специализаций.
-   * @returns {Promise<Specialization[]>} Промис с массивом специализаций.
+   * @returns {Promise<Specialization[]>}
    */
   async createSpecialization(
     specializationDto: SpecializationDto,
@@ -37,7 +37,7 @@ export class SpecializationsService {
    * Обновление специализации.
    * @param {string} id - id специализации.
    * @param {SpecializationDto} specializationDto - dto специализации.
-   * @returns {Promise<Specialization>} Промис с обновленной специализацией.
+   * @returns {Promise<Specialization>}
    */
   async updateSpecialization(
     id: string,
@@ -51,7 +51,7 @@ export class SpecializationsService {
   /**
    * Удаление специализации.
    * @param {string} id - id специализации.
-   * @returns {Promise<void>} Промис без значения.
+   * @returns {Promise<void>}
    */
   async deleteSpecialization(id: string): Promise<void> {
     await this.specializationModel.findByIdAndDelete(id);
