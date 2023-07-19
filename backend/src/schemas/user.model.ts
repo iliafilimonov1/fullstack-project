@@ -1,18 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { CompanySchema, CompanyDocument } from './company.model';
+import { AddressSchema, AddressDocument } from './address.model';
 import { UserI } from '../items/interfaces/user.interface';
 import { UserDto } from 'src/dtos/user.dto';
 
 export type UserDocument = User & Document;
-
-/**
- * Интерфейс для адреса пользователя.
- */
-export interface Address {
-  street: string;
-  suite: string;
-  city: string;
-}
 
 /**
  * Интерфейс для информации о компании пользователя.
@@ -109,16 +102,16 @@ export class User implements UserI {
    * @type {Address}
    * @required
    */
-  @Prop({ required: true })
-  address: Address;
+  @Prop({ type: AddressSchema, required: true })
+  address: AddressDocument;
 
   /**
    * Компания пользователя.
-   * @type {Company}
+   * @type {CompanyDocument}
    * @optional
    */
-  @Prop({ required: false })
-  company: Company;
+  @Prop({ type: CompanySchema, required: false })
+  company: CompanyDocument;
 
   /**
    * Роль пользователя.
@@ -152,8 +145,8 @@ export class User implements UserI {
     this.city = userDto.city;
     this.email = userDto.email;
     this.phone = userDto.phone;
-    this.address = userDto.address;
-    this.company = userDto.company;
+    this.address = userDto.address as AddressDocument;
+    this.company = userDto.company as CompanyDocument;
     this.role = userDto.role;
     this.isAdmin = userDto.isAdmin;
   }
