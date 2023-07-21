@@ -1,4 +1,5 @@
-import { Address, Company } from '../../schemas/user.model';
+import { IAddress } from '../../schemas/address.model';
+import { Company } from '../../schemas/company.model';
 
 export interface UserI {
   id: string;
@@ -11,7 +12,7 @@ export interface UserI {
   city: string;
   email: string;
   phone: string;
-  address: Address;
+  address: IAddress;
   company: Company;
   role: string;
   isAdmin: boolean;

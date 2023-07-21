@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { CompanySchema, CompanyDocument } from './company.model';
 import { AddressSchema, AddressDocument } from './address.model';
 import { UserI } from '../items/interfaces/user.interface';
@@ -153,3 +153,4 @@ export class User implements UserI {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+export const UserModel = mongoose.model<UserDocument>('User', UserSchema);
