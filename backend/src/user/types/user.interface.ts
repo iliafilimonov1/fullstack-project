@@ -14,6 +14,6 @@ export interface UserI {
   // phone: string;
   // address: Address;
   // company: Company;
-  // role: string;
+  role: string;
   // isAdmin: boolean;
 }

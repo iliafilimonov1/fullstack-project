@@ -17,19 +17,35 @@ export class AuthService {
   ) {}
 
   async signupLocal(dto: AuthDto): Promise<Tokens> {
+    console.log('Received data in signupLocal:', dto);
+
     const hash = await argon.hash(dto.password);
+
+    // Проверяем, существует ли уже пользователь с таким именем (username)
+    const existingUser = await this.userModel.findOne({
+      username: dto.username,
+    });
+    if (existingUser) {
+      throw new ForbiddenException('Username already exists');
+    }
 
     try {
       const user = await this.userModel.create({
-        name: dto.username,
-        hash,
+        username: dto.username,
+        password: dto.password,
       });
+
+      console.log('New user created:', user);
 
       const tokens = await this.getTokens(user._id.toString(), user.username);
       await this.updateRtHash(user._id.toString(), tokens.refresh_token);
 
+      console.log('Tokens generated:', tokens);
+
       return tokens;
     } catch (error) {
+      console.error('Error occurred during signupLocal:', error);
+
       if (error.code === 11000) {
         throw new ForbiddenException('Credentials incorrect');
       }

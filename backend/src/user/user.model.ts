@@ -10,10 +10,10 @@ export type UserDocument = User & Document;
 /**
  * Интерфейс для информации о компании пользователя.
  */
-export interface Company {
-  name: string;
-  position: string;
-}
+// export interface Company {
+//   name: string;
+//   position: string;
+// }
 
 @Schema()
 export class User implements UserI {
@@ -22,7 +22,7 @@ export class User implements UserI {
    * @type {string}
    * @required
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   id: string;
 
   /**
@@ -41,69 +41,69 @@ export class User implements UserI {
   @Prop({ required: true })
   username: string;
 
-  /**
-   * Фамилия пользователя.
-   * @type {string}
-   * @required
-   */
-  @Prop({ required: true })
-  surname: string;
+  // /**
+  //  * Фамилия пользователя.
+  //  * @type {string}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // surname: string;
 
-  /**
-   * Отчество пользователя.
-   * @type {string}
-   * @required
-   */
-  @Prop({ required: true })
-  patronymic: string;
+  // /**
+  //  * Отчество пользователя.
+  //  * @type {string}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // patronymic: string;
 
-  /**
-   * Дата рождения пользователя.
-   * @type {Date}
-   * @required
-   */
-  @Prop({ required: true })
-  birthDate: Date;
+  // /**
+  //  * Дата рождения пользователя.
+  //  * @type {Date}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // birthDate: Date;
 
-  /**
-   * Пол пользователя.
-   * @type {string}
-   * @required
-   */
-  @Prop({ required: true })
-  gender: string;
+  // /**
+  //  * Пол пользователя.
+  //  * @type {string}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // gender: string;
 
-  /**
-   * Страна пользователя.
-   * @type {string}
-   * @required
-   */
-  @Prop({ required: true })
-  country: string;
+  // /**
+  //  * Страна пользователя.
+  //  * @type {string}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // country: string;
 
-  /**
-   * Город пользователя.
-   * @type {string}
-   * @required
-   */
-  @Prop({ required: true })
-  city: string;
+  // /**
+  //  * Город пользователя.
+  //  * @type {string}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // city: string;
 
-  /**
-   * Email пользователя.
-   * @type {string}
-   * @required
-   */
-  @Prop({ required: true })
-  email: string;
+  // /**
+  //  * Email пользователя.
+  //  * @type {string}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // email: string;
 
-  /**
-   * Телефон пользователя.
-   * @type {string}
-   * @required
-   */
-  @Prop({ required: true })
-  phone: string;
+  // /**
+  //  * Телефон пользователя.
+  //  * @type {string}
+  //  * @required
+  //  */
+  // @Prop({ required: true })
+  // phone: string;
 
   // /**
   //  * Адрес пользователя.
@@ -121,14 +121,14 @@ export class User implements UserI {
   // @Prop({ type: CompanySchema, required: false })
   // company: CompanyDocument;
 
-  // /**
-  //  * Роль пользователя.
-  //  * @type {string}
-  //  * @required
-  //  * @enum ['admin', 'manager', 'teacher', 'student']
-  //  */
-  // @Prop({ required: true, enum: ['admin', 'manager', 'teacher', 'student'] })
-  // role: string;
+  /**
+   * Роль пользователя.
+   * @type {string}
+   * @required
+   * @enum ['admin', 'manager', 'teacher', 'student']
+   */
+  @Prop({ required: false, enum: ['admin', 'manager', 'teacher', 'student'] })
+  role: string;
 
   // /**
   //  * Является ли пользователь администратором.
@@ -143,7 +143,7 @@ export class User implements UserI {
    * @type {string}
    * @required
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   hash: string;
 
   /**
@@ -171,7 +171,7 @@ export class User implements UserI {
     // this.phone = userDto.phone;
     // this.address = userDto.address as AddressDocument;
     // this.company = userDto.company as CompanyDocument;
-    // this.role = userDto.role;
+    this.role = userDto.role;
     // this.isAdmin = userDto.isAdmin;
   }
 }
