@@ -11,7 +11,7 @@ import { NavItem } from './types';
 const navItems: NavItem[] = [
   { label: 'Home', link: '/', icon: <AiFillFilePdf /> },
   { label: 'Example Page', link: '/ExamplePage' },
-  { label: 'Login Page', link: '/LoginPage' },
+  { label: 'Registration Page', link: '/RegistrationForm' },
   { label: 'Framer-motion', link: '/FramerMotion' },
   { label: 'Frameworks', link: '/Frameworks' },
 ];

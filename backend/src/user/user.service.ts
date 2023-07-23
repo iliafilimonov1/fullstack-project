@@ -80,7 +80,7 @@ export class UsersService {
       // user.phone = userDto.phone;
       // user.address = userDto.address;
       // user.company = userDto.company;
-      // user.role = userDto.role;
+      user.role = userDto.role;
       // user.isAdmin = userDto.isAdmin;
 
       return user;
