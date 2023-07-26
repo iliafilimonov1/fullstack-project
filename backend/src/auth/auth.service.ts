@@ -32,7 +32,7 @@ export class AuthService {
     try {
       const user = await this.userModel.create({
         username: dto.username,
-        password: dto.password,
+        password: hash, // хеширование перед сохранением в бд
       });
 
       console.log('New user created:', user);
