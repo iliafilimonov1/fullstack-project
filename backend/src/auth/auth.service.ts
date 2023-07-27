@@ -60,7 +60,8 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    if (user.password !== dto.password) {
+    const passwordMatches = await argon.verify(user.password, dto.password);
+    if (!passwordMatches) {
       throw new ForbiddenException('Access Denied');
     }
 
