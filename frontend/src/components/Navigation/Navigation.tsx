@@ -11,7 +11,6 @@ import { NavItem } from './types';
 const navItems: NavItem[] = [
   { label: 'Home', link: '/', icon: <AiFillFilePdf /> },
   { label: 'Example Page', link: '/ExamplePage' },
-  { label: 'Registration Page', link: '/RegistrationForm' },
   { label: 'Framer-motion', link: '/FramerMotion' },
   { label: 'Frameworks', link: '/Frameworks' },
 ];
@@ -27,6 +26,14 @@ const Navigation: React.FC = () => {
     router.push(link);
     setActiveLink(link);
   }, []);
+
+  const onSignInClick = () => {
+    router.push('/LoginForm');
+  };
+
+  const onSignUpClick = () => {
+    router.push('/RegistrationForm');
+  };
 
   return (
     <header className="shadow bg-white h-16 mx-auto px-5 flex items-center justify-between">
@@ -53,6 +60,12 @@ const Navigation: React.FC = () => {
       <div className="flex cursor-pointer">
         <Globe />
         <User />
+        <Button variant="ghost" onClick={onSignInClick}>
+          Sign In
+        </Button>
+        <Button variant="ghost" onClick={onSignUpClick}>
+          Sign Up
+        </Button>
       </div>
     </header>
   );
