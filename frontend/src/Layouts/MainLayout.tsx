@@ -1,7 +1,7 @@
-import Navigation from '@/components/Navigation/Navigation';
+import Navigation from '../components/Navigation/Navigation';
 import React from 'react';
 
-/** Обертка всех страниц */
+/** Обертка главной страницы */
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <>
     <Navigation />
