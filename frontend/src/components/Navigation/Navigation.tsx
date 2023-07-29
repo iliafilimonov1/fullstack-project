@@ -6,6 +6,8 @@ import { IoLogoApple } from 'react-icons/io';
 import { extractStyles } from '@/services/utils';
 import Button from '../ui/Button/Button';
 import { NavItem } from './types';
+import { useAuth } from '@/hooks/useAuth';
+import axios from 'axios';
 
 /** Элементы навишации */
 const navItems: NavItem[] = [
@@ -19,7 +21,7 @@ const navItems: NavItem[] = [
 const Navigation: React.FC = () => {
   /** Для маршрутизации */
   const router = useRouter();
-
+  const { isAuthenticated, logout } = useAuth();
   const [activeLink, setActiveLink] = useState<string>();
 
   const onClickLinkHandler = useCallback((link: string) => {
@@ -27,13 +29,14 @@ const Navigation: React.FC = () => {
     setActiveLink(link);
   }, []);
 
-  const onSignInClick = () => {
-    router.push('/LoginForm');
-  };
-
-  const onSignUpClick = () => {
-    router.push('/RegistrationForm');
-  };
+  const logoutUser = useCallback(async () => {
+    try {
+      await axios.post('http://localhost:3000/auth/logout');
+      logout(); // Вызываем функцию из хука useAuth для очистки данных аутентификации
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  }, []);
 
   return (
     <header className="shadow bg-white h-16 mx-auto px-5 flex items-center justify-between">
@@ -58,14 +61,13 @@ const Navigation: React.FC = () => {
         ))}
       </nav>
       <div className="flex cursor-pointer">
-        <Globe />
-        <User />
-        <Button variant="ghost" onClick={onSignInClick}>
-          Sign In
-        </Button>
-        <Button variant="ghost" onClick={onSignUpClick}>
-          Sign Up
-        </Button>
+        {isAuthenticated && (
+          <div className="flex cursor-pointer">
+            <Button variant="link" onClick={logoutUser}>
+              Logout
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );
