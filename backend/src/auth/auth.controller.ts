@@ -10,7 +10,8 @@ import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
 import { RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
-import { Tokens } from './types';
+import { JwtPayloadWithRt, Tokens } from './types';
+import { GetRefreshToken } from 'src/common/decorators/get-refresh-token';
 
 @Controller('auth')
 export class AuthController {
@@ -42,8 +43,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   refreshTokens(
     @GetCurrentUserId() userId: number,
-    @GetCurrentUser('refreshToken') refreshToken: string,
+    @GetRefreshToken() refreshToken: string,
   ): Promise<Tokens> {
     return this.authService.refreshTokens(userId.toString(), refreshToken);
+  }
+
+  // Метод, использующий GetCurrentUser для получения всего пользователя
+  @Post('me')
+  @HttpCode(HttpStatus.OK)
+  getMe(@GetCurrentUser() user: JwtPayloadWithRt): JwtPayloadWithRt {
+    return user;
   }
 }
