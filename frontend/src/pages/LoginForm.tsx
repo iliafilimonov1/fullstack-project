@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useAuth } from '../hooks/useAuth';
+import Cookies from 'js-cookie';
 
 interface Tokens {
   access_token: string;
@@ -16,41 +16,28 @@ interface AuthDto {
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
       const dto: AuthDto = { username, password };
       const response = await axios.post<Tokens>('http://localhost:3000/auth/local/signin', dto);
       const tokens = response.data;
-      console.log('Access Token:', tokens.access_token);
-      console.log('Refresh Token:', tokens.refresh_token);
 
-      if (tokens.access_token && tokens.refresh_token) {
-        router.push('/Dashboard');
-      }
+      console.log('accessToken:', tokens.access_token);
+      console.log('refreshToken:', tokens.refresh_token);
+
+      Cookies.set('accessToken', tokens.access_token);
+      Cookies.set('refreshToken', tokens.refresh_token);
+
+      router.push('/');
     } catch (error) {
       console.error('Error during login:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
-
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/Dashboard');
-    }
-  }, [isAuthenticated]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div>
