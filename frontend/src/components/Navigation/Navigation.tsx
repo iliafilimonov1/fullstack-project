@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
-import { Globe, User } from 'lucide-react';
 import { AiFillFilePdf } from 'react-icons/ai';
 import { IoLogoApple } from 'react-icons/io';
 import { extractStyles } from '@/services/utils';
@@ -8,6 +7,7 @@ import Button from '../ui/Button/Button';
 import { NavItem } from './types';
 import { useAuth } from '@/hooks/useAuth';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 /** Элементы навишации */
 const navItems: NavItem[] = [
@@ -30,12 +30,7 @@ const Navigation: React.FC = () => {
   }, []);
 
   const logoutUser = useCallback(async () => {
-    try {
-      await axios.post('http://localhost:3000/auth/logout');
-      logout(); // Вызываем функцию из хука useAuth для очистки данных аутентификации
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
+    logout();
   }, []);
 
   return (
