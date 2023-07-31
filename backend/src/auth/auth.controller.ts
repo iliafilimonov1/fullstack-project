@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Get,
   UseGuards,
 } from '@nestjs/common';
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
@@ -12,6 +13,7 @@ import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
 import { JwtPayloadWithRt, Tokens } from './types';
 import { GetRefreshToken } from 'src/common/decorators/get-refresh-token';
+import { ForbiddenException } from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
@@ -48,10 +50,23 @@ export class AuthController {
     return this.authService.refreshTokens(userId.toString(), refreshToken);
   }
 
-  // Метод, использующий GetCurrentUser для получения всего пользователя
-  @Post('me')
+  @Public()
+  @Get('check-auth')
   @HttpCode(HttpStatus.OK)
-  getMe(@GetCurrentUser() user: JwtPayloadWithRt): JwtPayloadWithRt {
-    return user;
+  async checkAuthStatus(
+    @GetCurrentUser() user: JwtPayloadWithRt,
+  ): Promise<{ isAuthenticated: boolean }> {
+    try {
+      console.log('Current user:', user);
+      // Проверяем наличие пользователя
+      if (!user) {
+        throw new ForbiddenException('Invalid token');
+      }
+
+      return { isAuthenticated: true };
+    } catch (error) {
+      console.error('Error checking auth status:', error);
+      throw new ForbiddenException('Invalid token');
+    }
   }
 }

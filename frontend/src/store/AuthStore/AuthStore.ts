@@ -5,7 +5,7 @@ import axios from "axios";
 /**
  * Интерфейс для токенов доступа и обновления.
  */
-interface Tokens {
+export interface Tokens {
   access_token: string;
   refresh_token: string;
 }
@@ -13,10 +13,24 @@ interface Tokens {
 /**
  * Интерфейс для передачи данных аутентификации.
  */
-interface AuthDto {
+export interface AuthDto {
   username: string;
   password: string;
 }
+
+// перехватчик запросов для отладки
+axios.interceptors.request.use(
+  (config) => {
+    const accessToken = Cookies.get("accessToken");
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 /**
  * Класс AuthStore для управления состоянием аутентификации пользователя.
@@ -25,10 +39,37 @@ class AuthStore {
   @observable isAuthenticated = false;
 
   constructor() {
-    try {
-      makeObservable(this);
-    } catch (error) {
-      console.warn(error);
+    makeObservable(this);
+    this.checkAuthStatus();
+  }
+
+  /**
+   * Проверка статуса авторизации при загрузке приложения.
+   */
+  @action
+  async checkAuthStatus() {
+    const accessToken = Cookies.get("accessToken");
+    if (accessToken) {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/auth/check-auth"
+        );
+        console.log(response.data);
+        if (response.data.isAuthenticated) {
+          this.isAuthenticated = true;
+        } else {
+          Cookies.remove("accessToken");
+          this.isAuthenticated = false;
+        }
+      } catch (error) {
+        console.error("Error checking auth status:", error);
+        Cookies.remove("accessToken");
+        this.isAuthenticated = false;
+        console.error("Full error details:", error);
+      }
+    } else {
+      // Если токен отсутствует, сбрасываем флаг isAuthenticated
+      this.isAuthenticated = false;
     }
   }
 
@@ -50,7 +91,10 @@ class AuthStore {
       Cookies.set("accessToken", tokens.access_token);
       Cookies.set("refreshToken", tokens.refresh_token);
 
-      this.isAuthenticated = true;
+      // После успешной регистрации, проверяем статус авторизации
+      await this.checkAuthStatus();
+
+      console.log("Tokens saved to cookies:", tokens);
     } catch (error) {
       console.error("Error during registration:", error);
     }
@@ -75,6 +119,8 @@ class AuthStore {
       Cookies.set("refreshToken", tokens.refresh_token);
 
       this.isAuthenticated = true;
+
+      console.log("Tokens saved to cookies:", tokens);
     } catch (error) {
       console.error("Error during login:", error);
     }
