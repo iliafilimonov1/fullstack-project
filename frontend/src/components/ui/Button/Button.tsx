@@ -1,6 +1,6 @@
 import React, { ButtonHTMLAttributes, ReactNode } from 'react';
-import { cn } from '@/services/utils';
 import { BiLoaderAlt } from 'react-icons/bi';
+import { cn } from '@/services/utils';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'negative' | 'ghost' | 'link';
@@ -38,11 +38,16 @@ const Button: React.FC<ButtonProps> = ({
       'bg-transparent underline-offset-4 hover:underline text-slate-900 dark:text-slate-100 hover:bg-transparent dark:hover:bg-transparent':
         variant === 'link',
       'opacity-50 cursor-not-allowed': disabled,
-    }
+    },
   );
 
   return (
-    <button className={buttonClasses} onClick={onClick} disabled={disabled || isLoading}>
+    <button
+      className={buttonClasses}
+      disabled={disabled || isLoading}
+      onClick={onClick}
+      type="button"
+    >
       {isLoading && <BiLoaderAlt className="animate-spin cursor-not-allowed" />}
       {!isLoading && (
         <>

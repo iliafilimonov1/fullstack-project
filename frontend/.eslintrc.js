@@ -12,6 +12,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    "project": "../fullstack-project/frontend/tsconfig.json",
     ecmaFeatures: {
       jsx: true,
     },
@@ -23,14 +24,20 @@ module.exports = {
       typescript: {
         alwaysTryTypes: true,
       },
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        moduleDirectory: ['node_modules', 'src/'],
+    },
     },
   },
   plugins: [
     'react',
     '@typescript-eslint',
     'import',
+    'react-hooks'
   ],
   rules: {
+    'import/no-unresolved': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/dot-notation': 'off',
     '@typescript-eslint/no-unused-vars': ['error'
