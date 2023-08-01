@@ -5,7 +5,7 @@ import * as argon from 'argon2';
 import { AuthDto } from './dto';
 import { JwtPayload, Tokens } from './types';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '../user/user.model';
+import { UserDocument } from '../user/user.model';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
@@ -80,29 +80,6 @@ export class AuthService {
     return true;
   }
 
-  async getCurrentUser(authToken: string): Promise<User | null> {
-    try {
-      console.log('Received token:', authToken);
-      // Разбираем токен аутентификации для получения данных о пользователе
-      const decodedToken = this.jwtService.decode(authToken);
-      console.log('Decoded token:', decodedToken);
-      if (!decodedToken || typeof decodedToken === 'string') {
-        throw new ForbiddenException('Invalid token');
-      }
-
-      // Предполагая, что поле 'sub' в токене содержит идентификатор пользователя
-      const userId = decodedToken.sub;
-
-      // Ищем пользователя по идентификатору в базе данных
-      const user = await this.userModel.findById(userId);
-      console.log('User from database:', user);
-      return user ? user.toObject() : null;
-    } catch (error) {
-      console.error('Error getting current user:', error);
-      return null;
-    }
-  }
-
   async refreshTokens(userId: string, rt: string): Promise<Tokens> {
     const user = await this.userModel.findById(userId);
     if (!user || !user.hashedRt) {
@@ -110,11 +87,15 @@ export class AuthService {
     }
 
     const rtMatches = await argon.verify(user.hashedRt, rt);
+
+    console.log('rtMatches', rtMatches);
     if (!rtMatches) {
       throw new ForbiddenException('Access Denied');
     }
 
     const tokens = await this.getTokens(user._id.toString(), user.username);
+
+    console.log('refreshTokens', tokens);
     await this.updateRtHash(user._id.toString(), tokens.refresh_token);
 
     return tokens;

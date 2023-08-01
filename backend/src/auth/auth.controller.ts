@@ -4,16 +4,13 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Get,
   UseGuards,
 } from '@nestjs/common';
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
 import { RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
-import { JwtPayloadWithRt, Tokens } from './types';
-import { GetRefreshToken } from 'src/common/decorators/get-refresh-token';
-import { ForbiddenException } from '@nestjs/common';
+import { Tokens } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -44,29 +41,9 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   refreshTokens(
-    @GetCurrentUserId() userId: number,
-    @GetRefreshToken() refreshToken: string,
+    @GetCurrentUserId() userId: string,
+    @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<Tokens> {
-    return this.authService.refreshTokens(userId.toString(), refreshToken);
-  }
-
-  @Public()
-  @Get('check-auth')
-  @HttpCode(HttpStatus.OK)
-  async checkAuthStatus(
-    @GetCurrentUser() user: JwtPayloadWithRt,
-  ): Promise<{ isAuthenticated: boolean }> {
-    try {
-      console.log('Current user:', user);
-      // Проверяем наличие пользователя
-      if (!user) {
-        throw new ForbiddenException('Invalid token');
-      }
-
-      return { isAuthenticated: true };
-    } catch (error) {
-      console.error('Error checking auth status:', error);
-      throw new ForbiddenException('Invalid token');
-    }
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }
