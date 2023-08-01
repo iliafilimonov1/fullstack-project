@@ -1,9 +1,9 @@
-import { extractStyles } from '@/services/utils';
 import React, {
   useCallback, useMemo, useState,
 } from 'react';
 import { useEffectOnce } from 'usehooks-ts';
 import { GrClose } from 'react-icons/gr';
+import { extractStyles } from '@/services/utils';
 
 export interface DrawerProps {
   children?: React.ReactNode;
