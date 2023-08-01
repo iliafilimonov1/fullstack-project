@@ -40,38 +40,32 @@ class AuthStore {
 
   constructor() {
     makeObservable(this);
-    this.checkAuthStatus();
   }
 
-  /**
-   * Проверка статуса авторизации при загрузке приложения.
-   */
-  @action
-  async checkAuthStatus() {
-    const accessToken = Cookies.get("accessToken");
-    if (accessToken) {
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/auth/check-auth"
-        );
-        console.log(response.data);
-        if (response.data.isAuthenticated) {
-          this.isAuthenticated = true;
-        } else {
-          Cookies.remove("accessToken");
-          this.isAuthenticated = false;
-        }
-      } catch (error) {
-        console.error("Error checking auth status:", error);
-        Cookies.remove("accessToken");
-        this.isAuthenticated = false;
-        console.error("Full error details:", error);
-      }
-    } else {
-      // Если токен отсутствует, сбрасываем флаг isAuthenticated
-      this.isAuthenticated = false;
-    }
-  }
+  // @action
+  // async checkAuthStatus() {
+  //   try {
+  //     const refreshToken = Cookies.get("refreshToken");
+  //     console.log("AuthStore-refreshtoken", refreshToken);
+  //     const userId = Cookies.get("userId");
+  //     console.log("AuthStore-user-id", userId);
+
+  //     const response = await axios.post("http://localhost:3000/auth/refresh", {
+  //       userId,
+  //       rt: refreshToken,
+  //     });
+  //     console.log(response.data);
+
+  //     if (response.data.isAuthenticated) {
+  //       this.isAuthenticated = true;
+  //     } else {
+  //       this.isAuthenticated = false;
+  //       Cookies.remove("accessToken");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error checking auth status:", error);
+  //   }
+  // }
 
   /**
    * Регистрация пользователя.
@@ -119,6 +113,8 @@ class AuthStore {
       Cookies.set("refreshToken", tokens.refresh_token);
 
       this.isAuthenticated = true;
+
+      console.log(this.isAuthenticated);
 
       console.log("Tokens saved to cookies:", tokens);
     } catch (error) {

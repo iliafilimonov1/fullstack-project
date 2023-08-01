@@ -8,12 +8,13 @@ import { AppProps } from 'next/app';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const isAuthenticated = authStore.isAuthenticated;
-  const router = useRouter();
+  console.log(isAuthenticated)
+  //const router = useRouter();
 
-  useEffect(() => {
-    // При изменении роута проверяем аутентификацию пользователя
-    authStore.checkAuthStatus();
-  }, [router.asPath]);
+  // useEffect(() => {
+  //   // При изменении роута проверяем аутентификацию пользователя
+  //   authStore.checkAuthStatus();
+  // }, [router.asPath]);
 
   const PageWrapper = isAuthenticated ? MainLayout : AuthLayout;
 
