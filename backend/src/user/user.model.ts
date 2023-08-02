@@ -41,6 +41,27 @@ export class User implements UserI {
   @Prop({ required: true })
   username: string;
 
+  /**
+   * Токен доступа (access token) пользователя.
+   * @type {string}
+   */
+  @Prop({ required: false })
+  access_token: string;
+
+  /**
+   * Токен обновления (refresh token) пользователя.
+   * @type {string}
+   */
+  @Prop({ required: false })
+  refresh_token: string;
+
+  /**
+   * Срок истечения токена доступа пользователя.
+   * @type {string}
+   */
+  @Prop({ required: false })
+  accessTokenExpiresAt: Date;
+
   // /**
   //  * Фамилия пользователя.
   //  * @type {string}

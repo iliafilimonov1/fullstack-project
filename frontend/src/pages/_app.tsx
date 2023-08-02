@@ -1,22 +1,21 @@
 import '../styles/globals.css';
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import authStore from "@/store/AuthStore/AuthStore";
+import { observer } from 'mobx-react-lite';
 import MainLayout from '../Layouts/MainLayout';
 import AuthLayout from '../Layouts/AuthLayout';
 import { AppProps } from 'next/app';
+import authStore from "../store/AuthStore/AuthStore"; // Import the authStore instance directly
 
 const App = ({ Component, pageProps }: AppProps) => {
   const isAuthenticated = authStore.isAuthenticated;
-  console.log(isAuthenticated)
-  //const router = useRouter();
 
-  // useEffect(() => {
-  //   // При изменении роута проверяем аутентификацию пользователя
-  //   authStore.checkAuthStatus();
-  // }, [router.asPath]);
+  console.log(isAuthenticated);
 
   const PageWrapper = isAuthenticated ? MainLayout : AuthLayout;
+
+  useEffect(() => {
+    authStore.checkAndRefreshTokens();
+  }, []);
 
   return (
     <main>
@@ -27,4 +26,4 @@ const App = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export default React.memo(App);
+export default observer(App);

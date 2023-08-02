@@ -1,11 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Button from '../components/ui/Button/Button';
-import { useAuth } from '@/hooks/useAuth';
+import authStore from '../store/AuthStore/AuthStore';
 
 const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
 
   const onSignInClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -19,7 +18,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <>
-      {!isAuthenticated && (
+      {!authStore.isAuthenticated && (
         <section className="p-4">
           <div className="flex justify-end">
             <Button variant="secondary" onClick={onSignInClick}>
@@ -33,7 +32,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       )}
       {children}
     </>
-  )
+  );
 };
 
 export default React.memo(AuthLayout);

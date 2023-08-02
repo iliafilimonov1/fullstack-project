@@ -37,10 +37,10 @@ export class AuthService {
 
       console.log('New user created:', user);
 
-      const tokens = await this.getTokens(user._id.toString(), user.username);
-      await this.updateRtHash(user._id.toString(), tokens.refresh_token);
+      const tokens = await this.getTokens(user._id, user.username);
+      await this.updateRtHash(user._id, tokens.refresh_token);
 
-      console.log('Tokens generated:', tokens);
+      console.log(`tokens signup`, tokens);
 
       return tokens;
     } catch (error) {
@@ -65,9 +65,11 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    const tokens = await this.getTokens(user._id.toString(), user.username);
-    console.log('Tokens:', tokens);
-    await this.updateRtHash(user._id.toString(), tokens.refresh_token);
+    const tokens = await this.getTokens(user._id, user.username);
+
+    await this.updateRtHash(user.id, tokens.refresh_token);
+
+    console.log(`tokens signin`, tokens);
 
     return tokens;
   }
@@ -82,33 +84,41 @@ export class AuthService {
 
   async refreshTokens(userId: string, rt: string): Promise<Tokens> {
     const user = await this.userModel.findById(userId);
+    console.log(user)
     if (!user || !user.hashedRt) {
       throw new ForbiddenException('Access Denied');
     }
 
+    // Проверяем, соответствует ли предоставленный refresh token хешу в базе данных
     const rtMatches = await argon.verify(user.hashedRt, rt);
-
-    console.log('rtMatches', rtMatches);
+    console.log('backend hashedRt matches', rtMatches);
     if (!rtMatches) {
       throw new ForbiddenException('Access Denied');
     }
 
-    const tokens = await this.getTokens(user._id.toString(), user.username);
+    // Генерируем новые токены
+    const tokens = await this.getTokens(userId, user.username);
 
-    console.log('refreshTokens', tokens);
-    await this.updateRtHash(user._id.toString(), tokens.refresh_token);
+    await this.updateRtHash(user._id, tokens.refresh_token);
+
+    console.log(`tokens refresh`, tokens);
 
     return tokens;
   }
 
   async updateRtHash(userId: string, rt: string): Promise<void> {
-    const hash = await argon.hash(rt);
-    await this.userModel.findByIdAndUpdate(userId, { hashedRt: hash });
+    try {
+      const hash = await argon.hash(rt);
+      await this.userModel.findByIdAndUpdate(userId, { hashedRt: hash });
+    } catch (error) {
+      console.error('Error updating hashedRt:', error);
+      throw error;
+    }
   }
 
   async getTokens(userId: string, name: string): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
-      sub: +userId,
+      sub: userId,
       name: name,
     };
 
@@ -123,9 +133,15 @@ export class AuthService {
       }),
     ]);
 
+    // Добавляем время истечения токена в объект tokens
+    const accessTokenExpiresAt = new Date(
+      Date.now() + 15 * 60 * 1000,
+    ).toString();
+
     return {
       access_token: at,
       refresh_token: rt,
+      access_token_expires_at: accessTokenExpiresAt,
     };
   }
 }
