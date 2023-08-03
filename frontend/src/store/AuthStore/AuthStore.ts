@@ -1,6 +1,6 @@
-import { makeObservable, observable, action } from "mobx";
-import Cookies from "js-cookie";
-import axios from "axios";
+import { makeObservable, observable, action } from 'mobx';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 /**
  * Интерфейс для токенов доступа и обновления.
@@ -39,21 +39,21 @@ class AuthStore {
     try {
       const dto = { username, password };
 
-      const response = await axios.post<Tokens>( "http://localhost:3000/auth/local/signup", dto);
+      const response = await axios.post<Tokens>('http://localhost:3000/auth/local/signup', dto);
 
       const tokens = response.data;
 
       if (tokens) {
-        Cookies.set("accessToken", tokens.access_token);
-        Cookies.set("refreshToken", tokens.refresh_token);
-        Cookies.set("accessTokenExpires", tokens.access_token_expires);
+        Cookies.set('accessToken', tokens.access_token);
+        Cookies.set('refreshToken', tokens.refresh_token);
+        Cookies.set('accessTokenExpires', tokens.access_token_expires);
 
         this.isAuthenticated = true;
       } else {
-        console.error("Registration failed.");
+        console.error('Registration failed.');
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error('Error during registration:', error);
     }
   }
 
@@ -66,45 +66,45 @@ class AuthStore {
   async login(username: string, password: string) {
     try {
       const dto: AuthDto = { username, password };
-      const response = await axios.post<Tokens>("http://localhost:3000/auth/local/signin", dto);
+      const response = await axios.post<Tokens>('http://localhost:3000/auth/local/signin', dto);
       const tokens = response.data;
 
-      Cookies.set("accessToken", tokens.access_token);
-      Cookies.set("refreshToken", tokens.refresh_token);
-      Cookies.set("accessTokenExpires", tokens.access_token_expires);
+      Cookies.set('accessToken', tokens.access_token);
+      Cookies.set('refreshToken', tokens.refresh_token);
+      Cookies.set('accessTokenExpires', tokens.access_token_expires);
 
       this.isAuthenticated = true;
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error('Error during login:', error);
     }
   }
 
   async checkAndRefreshTokens() {
     try {
-      const refreshToken = Cookies.get("refreshToken");
+      const refreshToken = Cookies.get('refreshToken');
 
       if (refreshToken) {
-        const expirationTime = Cookies.get("accessTokenExpiresAt");
+        const expirationTime = Cookies.get('accessTokenExpiresAt');
 
         if (expirationTime && Date.now() >= Number.parseInt(expirationTime, 10)) {
-          const response = await axios.post("http://localhost:3000/auth/refresh",{ rt: refreshToken });
+          const response = await axios.post('http://localhost:3000/auth/refresh', { rt: refreshToken });
 
           const tokens = response.data;
 
           if (tokens.isAuthenticated) {
             if (tokens.access_token && tokens.refresh_token && tokens.access_token_expires) {
-              Cookies.set("accessToken", tokens.access_token, { httpOnly: true, secure: true });
-              Cookies.set("refreshToken", tokens.refresh_token, { httpOnly: true, secure: true });
-              Cookies.set("accessTokenExpires", tokens.access_token_expires);
+              Cookies.set('accessToken', tokens.access_token, { httpOnly: true, secure: true });
+              Cookies.set('refreshToken', tokens.refresh_token, { httpOnly: true, secure: true });
+              Cookies.set('accessTokenExpires', tokens.access_token_expires);
 
               this.isAuthenticated = true;
             } else {
-              throw new Error("Неверные данные токена, полученные с сервера.");
+              throw new Error('Неверные данные токена, полученные с сервера.');
             }
           } else {
-            Cookies.remove("accessToken");
-            Cookies.remove("refreshToken");
-            Cookies.remove("accessTokenExpires");
+            Cookies.remove('accessToken');
+            Cookies.remove('refreshToken');
+            Cookies.remove('accessTokenExpires');
             this.isAuthenticated = false;
           }
         } else {
@@ -114,7 +114,7 @@ class AuthStore {
         this.isAuthenticated = false;
       }
     } catch (error) {
-      console.error("Ошибка проверки статуса авторизации:", error);
+      console.error('Ошибка проверки статуса авторизации:', error);
       this.isAuthenticated = false;
     }
   }
@@ -123,10 +123,20 @@ class AuthStore {
    * Выход пользователя из системы.
    */
   async logout() {
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
+    try {
+      await axios.post('http://localhost:3000/auth/logout', null, {
+        headers: {
+          Authorization: `Bearer ${Cookies.get('accessToken')}`,
+        },
+      });
+      Cookies.remove('accessToken');
+      Cookies.remove('refreshToken');
+      Cookies.remove('accessTokenExpires');
 
-    this.isAuthenticated = false;
+      this.isAuthenticated = false;
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   }
 }
 
