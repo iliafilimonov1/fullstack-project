@@ -9,8 +9,6 @@ import authStore from "../store/AuthStore/AuthStore"; // Import the authStore in
 const App = ({ Component, pageProps }: AppProps) => {
   const isAuthenticated = authStore.isAuthenticated;
 
-  console.log(isAuthenticated);
-
   const PageWrapper = isAuthenticated ? MainLayout : AuthLayout;
 
   useEffect(() => {

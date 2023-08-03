@@ -16,6 +16,11 @@ import { Tokens } from './types';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  /**
+   * Регистрация нового пользователя.
+   * @param dto - Объект с данными для регистрации (username и password).
+   * @returns Объект с токенами (access_token и refresh_token).
+   */
   @Public()
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
@@ -23,6 +28,11 @@ export class AuthController {
     return this.authService.signupLocal(dto);
   }
 
+  /**
+   * Авторизация пользователя.
+   * @param dto - Объект с данными для авторизации (username и password).
+   * @returns Объект с токенами (access_token и refresh_token).
+   */
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
@@ -30,12 +40,23 @@ export class AuthController {
     return this.authService.signinLocal(dto);
   }
 
+  /**
+   * Выход текущего пользователя из системы.
+   * @param userId - id пользователя.
+   * @returns boolean
+   */
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: number): Promise<boolean> {
+  logout(@GetCurrentUserId() userId: string): Promise<boolean> {
     return this.authService.logout(userId.toString());
   }
 
+  /**
+   * Обновление токенов пользователя по предоставленному refresh token.
+   * @param userId - id пользователя.
+   * @param refreshToken - Refresh token пользователя.
+   * @returns Объект с новыми токенами (access_token и refresh_token).
+   */
   @Public()
   @UseGuards(RtGuard)
   @Post('refresh')

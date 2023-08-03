@@ -8,7 +8,7 @@ import axios from "axios";
 export interface Tokens {
   access_token: string;
   refresh_token: string;
-  access_token_expires_at: number;
+  access_token_expires: string;
 }
 
 /**
@@ -19,80 +19,14 @@ export interface AuthDto {
   password: string;
 }
 
-// // перехватчик запросов для отладки
-// axios.interceptors.request.use(
-//   (config) => {
-//     const accessToken = Cookies.get("accessToken");
-//     if (accessToken) {
-//       config.headers["Authorization"] = `Bearer ${accessToken}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
 /**
  * Класс AuthStore для управления состоянием аутентификации пользователя.
  */
 class AuthStore {
-  @observable isAuthenticated = false;
+  isAuthenticated: boolean = false;
 
   constructor() {
-    makeObservable(this);
-    this.checkAndRefreshTokens();
-  }
-
-  @action
-  async checkAndRefreshTokens() {
-    try {
-      const refreshToken = Cookies.get("refreshToken");
-      console.log("AuthStore-refreshtoken", refreshToken);
-
-      if (refreshToken) {
-        // Проверяем, есть ли информация о времени истечения токена
-        const expirationTime = Cookies.get("accessTokenExpiresAt");
-        console.log(expirationTime);
-
-        if (
-          expirationTime &&
-          Date.now() >= Number.parseInt(expirationTime, 10)
-        ) {
-          // Токен доступа истек, выполняем запрос на обновление токенов
-          const response = await axios.post(
-            "http://localhost:3000/auth/refresh",
-            {
-              rt: refreshToken,
-            }
-          );
-
-          const tokens = response.data;
-
-          if (tokens.isAuthenticated) {
-            Cookies.set("accessToken", tokens.access_token);
-            Cookies.set("refreshToken", tokens.refresh_token);
-            Cookies.set(
-              "accessTokenExpiresAt",
-              tokens.access_token_expires_at.toString()
-            );
-            this.isAuthenticated = true;
-          } else {
-            Cookies.remove("accessToken");
-            Cookies.remove("refreshToken");
-            Cookies.remove("accessTokenExpiresAt");
-            this.isAuthenticated = false;
-          }
-        } else {
-          this.isAuthenticated = true;
-        }
-      } else {
-        this.isAuthenticated = false;
-      }
-    } catch (error) {
-      console.error("Error checking auth status:", error);
-      this.isAuthenticated = false;
-    }
+    makeObservable(this, { isAuthenticated: observable, checkAndRefreshTokens: action });
   }
 
   /**
@@ -100,13 +34,24 @@ class AuthStore {
    * @param {string} username - Логин пользователя.
    * @param {string} password - Пароль пользователя.
    */
-  @action
+
   async register(username: string, password: string): Promise<void> {
     try {
-      const dto: AuthDto = { username, password };
-      await axios.post<void>("http://localhost:3000/auth/local/signup", dto);
+      const dto = { username, password };
 
-      console.log("Registration successful!");
+      const response = await axios.post<Tokens>( "http://localhost:3000/auth/local/signup", dto);
+
+      const tokens = response.data;
+
+      if (tokens) {
+        Cookies.set("accessToken", tokens.access_token);
+        Cookies.set("refreshToken", tokens.refresh_token);
+        Cookies.set("accessTokenExpires", tokens.access_token_expires);
+
+        this.isAuthenticated = true;
+      } else {
+        console.error("Registration failed.");
+      }
     } catch (error) {
       console.error("Error during registration:", error);
     }
@@ -117,37 +62,66 @@ class AuthStore {
    * @param {string} username - Логин пользователя.
    * @param {string} password - Пароль пользователя.
    */
-  @action
+
   async login(username: string, password: string) {
     try {
       const dto: AuthDto = { username, password };
-      const response = await axios.post<Tokens>(
-        "http://localhost:3000/auth/local/signin",
-        dto
-      );
+      const response = await axios.post<Tokens>("http://localhost:3000/auth/local/signin", dto);
       const tokens = response.data;
 
       Cookies.set("accessToken", tokens.access_token);
       Cookies.set("refreshToken", tokens.refresh_token);
-      Cookies.set(
-        "accessTokenExpiresAt",
-        tokens.access_token_expires_at.toString()
-      );
+      Cookies.set("accessTokenExpires", tokens.access_token_expires);
 
       this.isAuthenticated = true;
-
-      console.log(this.isAuthenticated);
-
-      console.log("Tokens saved to cookies:", tokens);
     } catch (error) {
       console.error("Error during login:", error);
+    }
+  }
+
+  async checkAndRefreshTokens() {
+    try {
+      const refreshToken = Cookies.get("refreshToken");
+
+      if (refreshToken) {
+        const expirationTime = Cookies.get("accessTokenExpiresAt");
+
+        if (expirationTime && Date.now() >= Number.parseInt(expirationTime, 10)) {
+          const response = await axios.post("http://localhost:3000/auth/refresh",{ rt: refreshToken });
+
+          const tokens = response.data;
+
+          if (tokens.isAuthenticated) {
+            if (tokens.access_token && tokens.refresh_token && tokens.access_token_expires) {
+              Cookies.set("accessToken", tokens.access_token, { httpOnly: true, secure: true });
+              Cookies.set("refreshToken", tokens.refresh_token, { httpOnly: true, secure: true });
+              Cookies.set("accessTokenExpires", tokens.access_token_expires);
+
+              this.isAuthenticated = true;
+            } else {
+              throw new Error("Неверные данные токена, полученные с сервера.");
+            }
+          } else {
+            Cookies.remove("accessToken");
+            Cookies.remove("refreshToken");
+            Cookies.remove("accessTokenExpires");
+            this.isAuthenticated = false;
+          }
+        } else {
+          this.isAuthenticated = true;
+        }
+      } else {
+        this.isAuthenticated = false;
+      }
+    } catch (error) {
+      console.error("Ошибка проверки статуса авторизации:", error);
+      this.isAuthenticated = false;
     }
   }
 
   /**
    * Выход пользователя из системы.
    */
-  @action
   async logout() {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");

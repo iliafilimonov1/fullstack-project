@@ -7,6 +7,9 @@ import { JwtPayload, JwtPayloadWithRt } from '../types';
 
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+  /**
+   * @param {ConfigService} config - Сервис конфигурации для получения секретного ключа JWT.
+   */
   constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -15,6 +18,13 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     });
   }
 
+  /**
+   * Метод для валидации JWT токена и извлечения refresh token из заголовка запроса.
+   * @param {Request} req - Объект запроса.
+   * @param {JwtPayload} payload - Расшифрованные данные JWT токена (Payload).
+   * @returns {JwtPayloadWithRt} - Объект с данными JWT Payload и дополнительным свойством refreshToken.
+   * @throws {ForbiddenException} Если refresh token отсутствует или некорректен.
+   */
   validate(req: Request, payload: JwtPayload): JwtPayloadWithRt {
     const refreshToken = req
       ?.get('authorization')
