@@ -28,11 +28,7 @@ const Navigation: React.FC = () => {
   }, [router]);
 
   const logoutUser = useCallback(async () => {
-    try {
-      await authStore.logout();
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
+    await authStore.logout();
   }, []);
 
   return (
