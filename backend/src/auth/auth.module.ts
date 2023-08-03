@@ -19,7 +19,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
       inject: [ConfigService],
     }),
-    ConfigModule.forRoot(), // Убедитесь, что ConfigModule.forRoot() импортирован в AppModule
+    ConfigModule.forRoot(),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [AuthController],

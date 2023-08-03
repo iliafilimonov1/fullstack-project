@@ -10,13 +10,17 @@ import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
 import { RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
-import { JwtPayloadWithRt, Tokens } from './types';
-import { GetRefreshToken } from 'src/common/decorators/get-refresh-token';
+import { Tokens } from './types';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  /**
+   * Регистрация нового пользователя.
+   * @param dto - Объект с данными для регистрации (username и password).
+   * @returns Объект с токенами (access_token и refresh_token).
+   */
   @Public()
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
@@ -24,6 +28,11 @@ export class AuthController {
     return this.authService.signupLocal(dto);
   }
 
+  /**
+   * Авторизация пользователя.
+   * @param dto - Объект с данными для авторизации (username и password).
+   * @returns Объект с токенами (access_token и refresh_token).
+   */
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
@@ -31,27 +40,31 @@ export class AuthController {
     return this.authService.signinLocal(dto);
   }
 
+  /**
+   * Выход текущего пользователя из системы.
+   * @param userId - id пользователя.
+   * @returns boolean
+   */
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: number): Promise<boolean> {
+  logout(@GetCurrentUserId() userId: string): Promise<boolean> {
     return this.authService.logout(userId.toString());
   }
 
+  /**
+   * Обновление токенов пользователя по предоставленному refresh token.
+   * @param userId - id пользователя.
+   * @param refreshToken - Refresh token пользователя.
+   * @returns Объект с новыми токенами (access_token и refresh_token).
+   */
   @Public()
   @UseGuards(RtGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   refreshTokens(
-    @GetCurrentUserId() userId: number,
-    @GetRefreshToken() refreshToken: string,
+    @GetCurrentUserId() userId: string,
+    @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<Tokens> {
-    return this.authService.refreshTokens(userId.toString(), refreshToken);
-  }
-
-  // Метод, использующий GetCurrentUser для получения всего пользователя
-  @Post('me')
-  @HttpCode(HttpStatus.OK)
-  getMe(@GetCurrentUser() user: JwtPayloadWithRt): JwtPayloadWithRt {
-    return user;
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }

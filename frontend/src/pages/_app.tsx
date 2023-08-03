@@ -1,14 +1,19 @@
 import '../styles/globals.css';
-import React from 'react';
-import { useAuth } from '../hooks/useAuth';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import MainLayout from '../Layouts/MainLayout';
 import AuthLayout from '../Layouts/AuthLayout';
 import { AppProps } from 'next/app';
-
+import authStore from "../store/AuthStore/AuthStore"; // Import the authStore instance directly
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = authStore.isAuthenticated;
+
   const PageWrapper = isAuthenticated ? MainLayout : AuthLayout;
+
+  useEffect(() => {
+    authStore.checkAndRefreshTokens();
+  }, []);
 
   return (
     <main>
@@ -19,4 +24,4 @@ const App = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export default React.memo(App);
+export default observer(App);

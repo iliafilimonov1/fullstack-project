@@ -14,6 +14,9 @@ export interface UserI {
   // phone: string;
   // address: Address;
   // company: Company;
-  role: string;
+  role?: string;
+  access_token?: string;
+  refresh_token?: string;
+  accessTokenExpiresAt?: Date;
   // isAdmin: boolean;
 }
