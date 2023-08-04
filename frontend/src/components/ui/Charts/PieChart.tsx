@@ -8,7 +8,6 @@ import {
   Tooltip,
   Legend,
   ChartData,
-  CoreChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
@@ -31,10 +30,6 @@ interface Props {
 }
 
 const PieChart: React.FC<Props> = ({ data, maxSize }) => {
-  const options: CoreChartOptions<'bar'> = {
-    responsive: true,
-  };
-
   const preparedData: ChartData<'bar'> = {
     labels,
     datasets: [
@@ -55,7 +50,6 @@ const PieChart: React.FC<Props> = ({ data, maxSize }) => {
   return (
     <Bar
       data={preparedData}
-      options={options}
     />
   );
 };
