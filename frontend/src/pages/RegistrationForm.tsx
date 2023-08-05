@@ -1,64 +1,54 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import authStore from '@/store/AuthStore/AuthStore';
+import Input from '@/components/ui/Input/Input';
+import Button from '@/components/ui/Button/Button';
 
 const RegistrationForm: React.FC = observer(() => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
+  const router = useRouter();
 
   const handleRegister = async () => {
-    if (username.trim() === '' || password.trim() === '') {
-      setErrorMessage('Please provide a username and password.');
-      return;
-    }
-
     try {
       await authStore.register(username, password);
-      setErrorMessage('');
-      setSuccessMessage('Registration successful!');
-    } catch (error: any) {
-      if (error.response) {
-        if (error.response.status === 400 && error.response.data.message.includes('Credentials incorrect')) {
-          setErrorMessage('User with this username already exists.');
-        } else {
-          console.error(error.response.data.message);
-          setErrorMessage(error.response.data.message);
-        }
-      } else {
-        console.error('An error occurred:', error.message);
-        setErrorMessage('An error occurred. Please try again later.');
+      router.push('/');
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null) {
+        console.error('An error occurred:', (error as Error).message);
       }
     }
   };
 
   return (
-    <div>
-      <h2>Registration Form</h2>
-      {errorMessage && <p className='bg-red-600'>{errorMessage}</p>}
-      {successMessage && <p className='bg-green-600'>{successMessage}</p>}
-      <form>
-        <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={handleUsernameChange} />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={handlePasswordChange} />
-        </div>
-        <button type="button" onClick={handleRegister}>
-          Register
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 absolute top-0 left-0 right-0">
+      <div className="bg-white p-8 shadow-lg rounded-md w-96">
+        <h2 className="text-2xl font-bold mb-4">Registration Form</h2>
+        <form>
+          <div className="mb-4">
+            <Input
+              label="Your login"
+              onChange={(e) => setUsername(e)}
+              value={username}
+            />
+          </div>
+          <div className="mb-4">
+            <Input
+              label="Your password"
+              onChange={(e) => setPassword(e)}
+              value={password}
+            />
+          </div>
+          <Button
+            onClick={handleRegister}
+            variant="primary"
+          >
+            Register
+          </Button>
+        </form>
+      </div>
     </div>
   );
 });

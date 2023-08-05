@@ -19,15 +19,20 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
       {!authStore.isAuthenticated && (
-        <section className="p-4">
-          <div className="flex justify-end">
-            <Button variant="secondary" onClick={onSignInClick}>
-              Sign In
-            </Button>
-            <Button variant="primary" onClick={onSignUpClick}>
-              Sign Up
-            </Button>
-          </div>
+        <section className="p-4 flex justify-end">
+          <Button
+            onClick={onSignInClick}
+            variant="secondary"
+          >
+            Sign In
+          </Button>
+          <Button
+            onClick={onSignUpClick}
+            variant="primary"
+          >
+            Sign Up
+          </Button>
+
         </section>
       )}
       {children}
