@@ -15,7 +15,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   useEffect(() => {
     authStore.checkAndRefreshTokens();
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <main>

@@ -14,7 +14,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     if (!isAuthenticated && router.pathname !== '/LoginForm' && router.pathname !== '/RegistrationForm') {
       router.push('/');
     }
-  }, []);
+  }, [isAuthenticated]);
 
   if (!isAuthenticated && router.pathname !== '/LoginForm' && router.pathname !== '/RegistrationForm') {
     return null;
