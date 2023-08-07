@@ -1,5 +1,5 @@
-import Navigation from '../components/Navigation/Navigation';
 import React from 'react';
+import Navigation from '../components/Navigation/Navigation';
 
 /** Обертка главной страницы */
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
