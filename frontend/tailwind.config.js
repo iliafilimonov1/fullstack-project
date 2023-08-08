@@ -15,7 +15,6 @@ module.exports = {
         /** Базовые стили свитчера */
         '.switcher': require('./src/components/ui/Switcher/switcher.config'),
         '.input': require('./src/components/ui/Input/input.config'),
-        '.button': require('./src/components/ui/Input/input.config'),
       })
     })
   ],

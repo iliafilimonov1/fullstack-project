@@ -1,33 +1,53 @@
-import React, { useState } from "react";
-import { observer } from "mobx-react-lite";
-import authStore from "@/store/AuthStore/AuthStore";
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import authStore from '@/store/AuthStore/AuthStore';
+import Modal from '@/components/ui/Modal/Modal';
+import Input from '@/components/ui/Input/Input';
+import Button from '@/components/ui/Button/Button';
 
+const LoginForm: React.FC = () => {
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [isModalOpen, setModalOpen] = useState<boolean>(true);
 
-const LoginForm: React.FC = observer(() => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const router = useRouter();
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await authStore.login(username, password);
+    router.push('/');
   };
 
-  return (
-    <div>
-      <h2>Login form</h2>
+  const handleModalClose = () => {
+    setModalOpen(false);
+    router.push('/');
+  };
+
+  return isModalOpen ? (
+    <Modal
+      onClose={handleModalClose}
+      title="Login Form"
+    >
       <form>
-        <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        <button onClick={handleLogin}>Login</button>
+        <Input
+          label="Your login"
+          onChange={(e) => setUsername(e)}
+          value={username}
+        />
+        <Input
+          label="Your password"
+          onChange={(e) => setPassword(e)}
+          value={password}
+        />
+        <Button
+          onClick={handleLogin}
+          variant="primary"
+        >
+          Login
+        </Button>
       </form>
-    </div>
-  );
-});
+    </Modal>
+  ) : null;
+};
 
 export default LoginForm;
