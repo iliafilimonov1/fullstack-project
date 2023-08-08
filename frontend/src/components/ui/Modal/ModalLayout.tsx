@@ -1,10 +1,11 @@
-import { extractStyles } from '@/services/utils';
 import type { PropsWithChildren } from 'react';
 import React, { forwardRef } from 'react';
+import { extractStyles } from '@/services/utils';
 
 type ModalLayoutProps = PropsWithChildren & {
   duration?: number;
   className?: string;
+  children?: React.ReactNode;
 };
 
 const ModalLayout = forwardRef<HTMLDivElement, ModalLayoutProps>(({
