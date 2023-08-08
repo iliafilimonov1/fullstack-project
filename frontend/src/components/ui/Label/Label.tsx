@@ -13,7 +13,7 @@ const Label: React.FC<LabelProps> = ({ children, size = 'x' }) => {
       default:
         return 'text-lg';
     }
-  }, []);
+  }, [size]);
 
   return <div className={styles}>{children}</div>;
 };

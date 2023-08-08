@@ -1,6 +1,6 @@
-import { extractStyles } from '@/services/utils';
-import React, { useState } from 'react';
+import React from 'react';
 import useToggle from 'usehooks-ts/dist/esm/useToggle/useToggle';
+import { extractStyles } from '@/services/utils';
 
 /** Свитчер */
 const Switcher: React.FC = () => {

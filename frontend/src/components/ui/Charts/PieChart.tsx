@@ -41,7 +41,7 @@ const PieChart: React.FC<Props> = ({ data, maxSize }) => {
       {
         label: 'Dataset 2',
         data: data
-          .map((i) => maxSize || Math.max(...data.map((i) => i.size)) - i.size),
+          .map((i) => maxSize || Math.max(...data.map((item) => item.size)) - i.size),
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
     ],

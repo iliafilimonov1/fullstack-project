@@ -1,6 +1,6 @@
-import { extractStyles } from '@/services/utils';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { extractStyles } from '@/services/utils';
 import type { BaseTextareaProps } from './types';
 
 /** Базовый Textarea */

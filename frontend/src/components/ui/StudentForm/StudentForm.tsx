@@ -55,43 +55,47 @@ const StudentForm: React.FC<StudentFormProps> = ({ selectedValue, onDataSubmit, 
   };
 
   return (
-    <form action="#" onInput={onInputHandler} onSubmit={onSubmitHandler}>
+    <form
+      action="#"
+      onInput={onInputHandler}
+      onSubmit={onSubmitHandler}
+    >
       <Input
         className="mb-2"
         id="name"
         label="Your name"
-        value={data.name || ''}
         readOnly={isReadOnly}
+        value={data.name || ''}
       />
       <Input
         className="mb-2"
         id="surname"
         label="Your surname"
-        value={data.surname || ''}
         readOnly={isReadOnly}
+        value={data.surname || ''}
       />
       <Input
         className="mb-2"
         id="address"
         label="Your address"
-        value={data.address || ''}
         readOnly={isReadOnly}
+        value={data.address || ''}
       />
       <Input
         className="mb-2"
         id="age"
         label="Your age"
-        value={data.age?.toString() || ''}
         readOnly={isReadOnly}
+        value={data.age?.toString() || ''}
       />
       <Select
         className="mb-2"
+        defaultValue={options[0]}
+        disabled={isReadOnly}
         label="Group name"
         onSelect={(option) => setData({ ...data, groupName: option?.title })}
         options={options}
-        defaultValue={options[0]} 
         selectedOption={selectedValue}
-        disabled={isReadOnly}
       />
       {!isReadOnly && (
         <Button type="submit">Submit form</Button>

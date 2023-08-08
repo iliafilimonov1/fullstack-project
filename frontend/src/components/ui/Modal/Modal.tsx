@@ -1,4 +1,3 @@
-import { extractStyles } from '@/services/utils';
 import React, {
   useLayoutEffect,
   useMemo,
@@ -7,6 +6,7 @@ import React, {
   useRef,
 } from 'react';
 import ReactDom from 'react-dom';
+import { extractStyles } from '@/services/utils';
 import ModalLayout from './ModalLayout';
 import type { ModalProps } from './types';
 
