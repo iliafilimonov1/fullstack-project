@@ -1,16 +1,15 @@
 import React, { useRef } from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import DropdownMenuItem from './DropdownMenuItem';
 import { useOnClickOutside, useToggle } from 'usehooks-ts';
+import DropdownMenuItem from './DropdownMenuItem';
 import Button from '../Button/Button';
 import { DropdownMenuProps } from './types';
-
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) => {
   const [isOpen, toggleIsOpen] = useToggle();
   const menuRef = useRef<HTMLDivElement>(null);
-  
-  useOnClickOutside(menuRef, toggleIsOpen)
+
+  useOnClickOutside(menuRef, toggleIsOpen);
 
   const handleItemClick = (option: string) => {
     toggleIsOpen();
@@ -20,9 +19,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) =>
   return (
     <div className="relative inline-flex">
       <Button
-        variant="secondary"
-        onClick={toggleIsOpen}
         icon={<BiDotsHorizontalRounded />}
+        onClick={toggleIsOpen}
+        variant="secondary"
       />
       {isOpen && (
         <div
@@ -31,10 +30,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) =>
         >
           {items.map(({ icon, text }, index) => (
             <DropdownMenuItem
-              key={index}
+              key={`${index.toString()}_`}
               icon={icon}
-              text={text}
               onItemClick={handleItemClick}
+              text={text}
             />
           ))}
         </div>

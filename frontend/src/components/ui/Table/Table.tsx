@@ -31,7 +31,7 @@ const Table = <T extends object>({
     {data.length > 0 ? (
       data.map((item, index) => (
         <TableRow<T>
-          key={`${index}`}
+          key={`${index.toString()}_`}
           onDropdownOptionSelect={onDropdownOptionSelect}
           rowData={item}
         />

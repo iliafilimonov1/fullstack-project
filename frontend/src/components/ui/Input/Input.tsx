@@ -41,14 +41,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
           {label}
         </div>
       )}
-      <div className={
-        extractStyles`
-         
-         ${error && 'border-red-600'}
-         ${error && 'text-red-600'}
-          `
-      }
-      >
+      <div className={extractStyles`${error && 'border-red-600 text-red-600'}`}>
         <input
           ref={ref}
           className={`input 

@@ -1,6 +1,6 @@
 import React from 'react';
-import DropdownCell from './DropDownCell';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import DropdownCell from './DropDownCell';
 import TextCell from './TextCell';
 
 interface TableRowProps<T> {
@@ -8,14 +8,17 @@ interface TableRowProps<T> {
   onDropdownOptionSelect?: (option: string, row: T) => void;
 }
 
-const TableRow = <T extends object>({ rowData, onDropdownOptionSelect }: TableRowProps<T>): React.ReactElement => {
+const TableRow = <T extends object>({
+  rowData,
+  onDropdownOptionSelect,
+}: TableRowProps<T>): React.ReactElement => {
   const rows = Object.keys(rowData || {}).filter((key) => key !== 'id') as (keyof T)[];
 
   return (
     <div className="flex flex-row">
       {rows.map((key, index) => (
         <TextCell<T>
-          key={`${String(key)}_${index}`}
+          key={`${String(key)}_${index.toString()}`}
           value={String(rowData?.[key])}
         />
       ))}

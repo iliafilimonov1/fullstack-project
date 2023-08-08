@@ -7,7 +7,7 @@ import Input from '../Input/Input';
 import { SelectOption, SelectProps } from './types';
 
 const Select: React.FC<SelectProps> = ({
-  options, onSelect, selectedOption, disabled, label, className, defaultValue
+  options, onSelect, selectedOption, disabled, label, className, defaultValue,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
