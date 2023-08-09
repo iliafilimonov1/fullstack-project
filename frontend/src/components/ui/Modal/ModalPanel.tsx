@@ -1,29 +1,32 @@
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, ReactEventHandler } from 'react';
 import React, { forwardRef } from 'react';
 import { extractStyles } from '@/services/utils';
 
-type ModalLayoutProps = PropsWithChildren & {
+type ModalPanelProps = PropsWithChildren & {
   duration?: number;
   className?: string;
   children?: React.ReactNode;
+  onClick?: ReactEventHandler<HTMLDivElement>;
 };
 
-const ModalLayout = forwardRef<HTMLDivElement, ModalLayoutProps>(({
+const ModalPanel = forwardRef<HTMLDivElement, ModalPanelProps>(({
   children,
   className,
   duration,
+  onClick,
 }, ref) => (
   <div
     ref={ref}
     className={extractStyles`
-      m-auto p-4 bg-white rounded-xl opacity-100
+    p-4 bg-white rounded-md w-96 h-96
       ${className}
     `}
+    onClick={onClick}
     style={duration ? { transitionDuration: `${duration}ms` } : undefined}
   >
     {children}
   </div>
 ));
-ModalLayout.displayName = 'ModalLayout';
+ModalPanel.displayName = 'ModalPanel';
 
-export default React.memo(ModalLayout);
+export default React.memo(ModalPanel);
