@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
 }) => {
   const buttonClasses = cn(
-    'rounded inline-flex items-center',
+    'rounded inline-flex items-center justify-center',
     className,
     {
       'py-2 px-2': size === 'md',

@@ -9,9 +9,9 @@ import React, {
 import ReactDom from 'react-dom';
 import { GrFormClose } from 'react-icons/gr';
 import { extractStyles } from '@/services/utils';
-import ModalLayout from './ModalLayout';
 import type { ModalProps } from './types';
 import Button from '../Button/Button';
+import ModalPanel from './ModalPanel';
 
 /** Длительность анимации с мс */
 const ModalAnimationDuration = 200;
@@ -21,15 +21,15 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   // контейнер для всех модалок
   let modalRoot: HTMLElement | null;
-  if (typeof document !== 'undefined') {
-    modalRoot = document?.getElementById('modal');
-    if (!modalRoot) {
-      const portal = document.createElement('div');
-      portal.id = 'modal';
-      document.body.appendChild(portal);
-      modalRoot = portal; // иначе первый клик не работает
-    }
+  if (document && !document.getElementById('modal')) {
+    const portal = document.createElement('div');
+    portal.id = 'modal';
+    document.body.appendChild(portal);
+    modalRoot = portal;
+  } else {
+    modalRoot = document.getElementById('modal');
   }
+
   /** Открыта ли модалка (для анимации) */
   const [isOpen, setOpen] = useState(false);
 
@@ -48,56 +48,74 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [onClose]);
 
-  /** Элемент модального окна, который будет монтироваться */
-  const elem = useMemo(() => {
-    const temp = document.createElement('div');
-    temp.setAttribute('data-modal-overlay', 'true');
-
-    temp.onclick = (e) => {
-      if (e.target instanceof HTMLDivElement && e.target.getAttribute('data-modal-overlay') === 'true') {
-        if (onClose) {
-          closeModal();
-        }
-      }
-    };
-    return temp;
-  }, [onClose, closeModal]);
-
   /** Реф на окно внутри оверлея */
   const modalRef = useRef<HTMLDivElement>(null);
 
+  /** Элемент модального окна, который будет монтироваться */
+  const modalOverlay = useMemo(() => {
+    const overlay = document.createElement('div');
+    overlay.setAttribute('data-modal-overlay', 'true');
+    return overlay;
+  }, []);
+
+  /** Обработчик клика на оверлее */
+  const handleOverlayClick: React.MouseEventHandler<HTMLDivElement> = useCallback((e) => {
+    const target = e.currentTarget;
+    const isOverlay = target.getAttribute('data-modal-overlay') === 'true';
+
+    if (isOverlay) {
+      if (onClose) {
+        closeModal();
+      }
+    }
+  }, []);
+
+  /** Монтирование модалки в DOM */
+  useLayoutEffect(() => {
+    modalOverlay.className = 'fixed w-full h-full top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black/40 z-50';
+    modalRoot?.appendChild(modalOverlay);
+
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (!(e.target instanceof HTMLDivElement)) { return; }
+
+      const isOverlay = e.target.getAttribute('data-modal-overlay') === 'true';
+      if (isOverlay && onClose) {
+        closeModal();
+      }
+    };
+
+    modalOverlay.addEventListener('click', handleDocumentClick);
+    openModal();
+
+    return () => {
+      modalRoot?.removeChild(modalOverlay);
+      modalOverlay.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+
   /** Обработчик закрытия через Esc */
-  const handler = (e: KeyboardEvent) => {
+  const handleEscape = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       closeModal();
     }
   };
 
-  /** Монтирование модалки в DOM */
-  useLayoutEffect(() => {
-    elem.className = 'fixed w-full h-full top-0 left-0 flex bg-black/30 z-3';
-    modalRoot?.appendChild(elem);
-    openModal();
-    return () => {
-      modalRoot?.removeChild(elem);
-    };
-  }, []);
-
   /** Добавление обработчика закрытия по нажатию на Esc */
   useEffect(() => {
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
   return ReactDom.createPortal(
-    <ModalLayout
+    <ModalPanel
       ref={modalRef}
       className={extractStyles`
-        transition  
+        transition
         ${isOpen ? 'opacity-100' : 'opacity-0'}
         ${className}
       `}
       duration={ModalAnimationDuration}
+      onClick={handleOverlayClick}
     >
       <header className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">{title}</h2>
@@ -110,9 +128,11 @@ const Modal: React.FC<ModalProps> = ({
           <GrFormClose />
         </Button>
       </header>
+
       {children}
-    </ModalLayout>,
-    elem,
+
+    </ModalPanel>,
+    modalOverlay,
   );
 };
 
