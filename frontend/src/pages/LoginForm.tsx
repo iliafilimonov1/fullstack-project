@@ -30,16 +30,19 @@ const LoginForm: React.FC = () => {
     >
       <form>
         <Input
+          className="mb-4"
           label="Your login"
           onChange={(e) => setUsername(e)}
           value={username}
         />
         <Input
+          className="mb-4"
           label="Your password"
           onChange={(e) => setPassword(e)}
           value={password}
         />
         <Button
+          className="w-full mt-24"
           onClick={handleLogin}
           variant="primary"
         >

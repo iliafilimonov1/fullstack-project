@@ -35,21 +35,20 @@ const RegistrationForm: React.FC = observer(() => {
       title="Registration Form"
     >
       <form>
-        <div className="mb-4">
-          <Input
-            label="Your login"
-            onChange={(e) => setUsername(e)}
-            value={username}
-          />
-        </div>
-        <div className="mb-4">
-          <Input
-            label="Your password"
-            onChange={(e) => setPassword(e)}
-            value={password}
-          />
-        </div>
+        <Input
+          className="mb-4"
+          label="Your login"
+          onChange={(e) => setUsername(e)}
+          value={username}
+        />
+        <Input
+          className="mb-4"
+          label="Your password"
+          onChange={(e) => setPassword(e)}
+          value={password}
+        />
         <Button
+          className="w-full mt-24"
           onClick={handleRegister}
           variant="primary"
         >
