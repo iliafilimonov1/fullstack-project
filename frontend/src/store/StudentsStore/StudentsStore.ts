@@ -1,16 +1,18 @@
 import { runInAction } from 'mobx';
 import BaseListStore from '../BaseListStore/BaseListStore';
 import { Student } from '../StudentStore/types';
+import StudentsService from '@/services/StudentService';
 
 class StudentsStore extends BaseListStore<Student> {
   constructor(data?: Student[]) {
     super(data ?? []);
   }
 
-  public fetch() {
+  public async fetch() {
     this.runWithStateControl(async () => {
+      const { data } = await StudentsService.StudentsList();
       runInAction(() => {
-        this.list = [];
+        this.list = data;
       });
     });
   }
