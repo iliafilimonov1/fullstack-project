@@ -16,16 +16,7 @@ const ExamplePage: React.FC = () => {
   const [isViewMode, setViewMode] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/students');
-        studentsStore.list = response.data;
-      } catch (error) {
-        console.error('Ошибка при выполнении запроса', error);
-      }
-    };
-
-    fetchData();
+    studentsStore.fetch();
   }, [studentsStore]);
 
   const handleButtonClick = () => {
