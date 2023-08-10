@@ -14,7 +14,7 @@ export interface FormData {
 
 export interface StudentFormProps {
   selectedValue?: SelectOption;
-  onDataSubmit?: (data: FormData) => void;
+  onDataSubmit?: (data: FormData) => void | Promise<void>;
   isReadOnly?: boolean;
 }
 

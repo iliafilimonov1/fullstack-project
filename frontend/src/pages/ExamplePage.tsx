@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import axios from 'axios';
 import useStores from '../hooks/useStores';
 import { Student } from '../store/StudentStore/types';
 import Table from '../components/ui/Table/Table';
 import Button from '../components/ui/Button/Button';
 import Drawer from '../components/ui/Drawer/Drawer';
 import StudentForm from '../components/ui/StudentForm/StudentForm';
-import axios from 'axios';
 // import { BiDotsHorizontalRounded } from 'react-icons/bi';
 
 const ExamplePage: React.FC = () => {
@@ -34,19 +34,6 @@ const ExamplePage: React.FC = () => {
     setDrawerOpen(true);
   };
 
-  const handleDataSubmit = async (data: Student) => {
-    const studentData = { ...data };
-
-    if (selectedStudent) {
-      await updateStudent(studentData);
-    } else {
-      await createStudent(studentData);
-    }
-
-    setDrawerOpen(false);
-    setViewMode(false);
-  };
-
   const createStudent = async (data: Student) => {
     try {
       const response = await axios.post('http://localhost:3000/students', data);
@@ -62,7 +49,7 @@ const ExamplePage: React.FC = () => {
     }
   };
 
-  const updateStudent = async (data: Student) => {
+  const updateStudent = async (data: Omit<Student, 'id'>) => {
     if (selectedStudent) {
       try {
         const response = await axios.put(`http://localhost:3000/students/${selectedStudent.id}`, data);
@@ -78,14 +65,17 @@ const ExamplePage: React.FC = () => {
     }
   };
 
-  const handleDropdownOptionSelect = (option: string, student: Student) => {
-    if (option === 'Открыть') {
-      setSelectedStudent(student);
-      setViewMode(true);
-      setDrawerOpen(true);
-    } else if (option === 'Удалить') {
-      handleDeleteClick(student);
+  const handleDataSubmit = async (data: Omit<Student, 'id'>) => {
+    const studentData = { ...data };
+
+    if (selectedStudent) {
+      await updateStudent(studentData);
+    } else {
+      await createStudent(studentData);
     }
+
+    setDrawerOpen(false);
+    setViewMode(false);
   };
 
   const handleDeleteClick = async (student: Student) => {
@@ -103,6 +93,16 @@ const ExamplePage: React.FC = () => {
     }
   };
 
+  const handleDropdownOptionSelect = (option: string, student: Student) => {
+    if (option === 'Открыть') {
+      setSelectedStudent(student);
+      setViewMode(true);
+      setDrawerOpen(true);
+    } else if (option === 'Удалить') {
+      handleDeleteClick(student);
+    }
+  };
+
   return (
     <>
       {isDrawerOpen && (
@@ -113,14 +113,16 @@ const ExamplePage: React.FC = () => {
         >
           <StudentForm
             // @ts-ignore
-            onDataSubmit={handleDataSubmit}
-            // @ts-ignore
-            selectedValue={selectedStudent}
             isReadOnly={isViewMode}
+            onDataSubmit={handleDataSubmit}
+            selectedValue={{ title: selectedStudent?.name ?? '', id: selectedStudent?.id ?? '' }}
           />
         </Drawer>
       )}
-      <Button onClick={handleButtonClick} type="submit">
+      <Button
+        onClick={handleButtonClick}
+        type="submit"
+      >
         Добавить студента
       </Button>
       {!!studentsStore.list?.length && (

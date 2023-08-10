@@ -1,20 +1,21 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { observer } from 'mobx-react-lite';
 import Button from '../components/ui/Button/Button';
 import authStore from '../store/AuthStore/AuthStore';
 
 const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
 
-  const onSignInClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onSignInClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push('/LoginForm');
-  };
+  }, [router]);
 
-  const onSignUpClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onSignUpClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     router.push('/RegistrationForm');
-  };
+  }, [router]);
 
   return (
     <>
@@ -32,7 +33,6 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           >
             Sign Up
           </Button>
-
         </section>
       )}
       {children}
@@ -40,4 +40,4 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-export default React.memo(AuthLayout);
+export default observer(AuthLayout);
