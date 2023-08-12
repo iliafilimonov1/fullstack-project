@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AppProps } from 'next/app';
+import { ModalProvider } from '../components/ui/Overlay/ModalContext';
 
 import MainLayout from '../Layouts/MainLayout';
 import AuthLayout from '../Layouts/AuthLayout';
@@ -18,13 +19,15 @@ const App = ({ Component, pageProps }: AppProps) => {
   }, [isAuthenticated]);
 
   return (
-    <main>
-      <PageWrapper>
-        <ProtectedRoute>
-          <Component {...pageProps} />
-        </ProtectedRoute>
-      </PageWrapper>
-    </main>
+    <ModalProvider>
+      <main>
+        <PageWrapper>
+          <ProtectedRoute>
+            <Component {...pageProps} />
+          </ProtectedRoute>
+        </PageWrapper>
+      </main>
+    </ModalProvider>
   );
 };
 
