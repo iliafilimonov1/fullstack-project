@@ -10,6 +10,7 @@ import authStore from '@/store/AuthStore/AuthStore';
 /** Элементы навигации */
 const navItems: NavItem[] = [
   { label: 'Home', link: '/', icon: <AiFillFilePdf /> },
+  { label: 'Dashboard', link: '/Dashboard' },
 ];
 
 /** Компонент панель навигации */
