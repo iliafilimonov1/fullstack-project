@@ -1,6 +1,9 @@
-import { makeObservable, observable, action } from 'mobx';
+import {
+  makeObservable, observable, action, runInAction,
+} from 'mobx';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import BaseStore from '../BaseStore/BaseStore';
 
 /**
  * Интерфейс для токенов доступа и обновления.
@@ -22,10 +25,11 @@ export interface AuthDto {
 /**
  * Класс AuthStore для управления состоянием аутентификации пользователя.
  */
-class AuthStore {
+class AuthStore extends BaseStore {
   isAuthenticated: boolean = false;
 
   constructor() {
+    super();
     makeObservable(this, { isAuthenticated: observable, checkAndRefreshTokens: action });
   }
 
@@ -36,7 +40,7 @@ class AuthStore {
    */
 
   async register(username: string, password: string): Promise<void> {
-    try {
+    await this.runWithStateControl(async () => {
       const dto = { username, password };
 
       const response = await axios.post<Tokens>('http://localhost:3000/auth/local/signup', dto);
@@ -48,13 +52,13 @@ class AuthStore {
         Cookies.set('refreshToken', tokens.refresh_token);
         Cookies.set('accessTokenExpires', tokens.access_token_expires);
 
-        this.isAuthenticated = true;
+        runInAction(() => {
+          this.isAuthenticated = true;
+        });
       } else {
         console.error('Registration failed.');
       }
-    } catch (error) {
-      console.error('Error during registration:', error);
-    }
+    });
   }
 
   /**
