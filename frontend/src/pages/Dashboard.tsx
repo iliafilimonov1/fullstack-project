@@ -12,8 +12,6 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   const modalContext = useContext(ModalContext);
 
-  console.log(modalContext);
-
   const openModal = () => {
     console.log('Modal opened');
     // @ts-ignore
