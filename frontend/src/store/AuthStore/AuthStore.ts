@@ -26,11 +26,10 @@ export interface AuthDto {
  * Класс AuthStore для управления состоянием аутентификации пользователя.
  */
 class AuthStore extends BaseStore {
-  isAuthenticated: boolean = false;
+  @observable isAuthenticated = false;
 
   constructor() {
     super();
-    makeObservable(this, { isAuthenticated: observable, checkAndRefreshTokens: action });
   }
 
   /**

@@ -20,15 +20,12 @@ const Modal: React.FC<ModalProps> = ({
   children, onClose, className, title,
 }) => {
   // контейнер для всех модалок
-  let modalRoot: HTMLElement | null;
-  if (document && !document.getElementById('modal')) {
+  const modalRoot = useMemo(() => {
     const portal = document.createElement('div');
     portal.id = 'modal';
     document.body.appendChild(portal);
-    modalRoot = portal;
-  } else {
-    modalRoot = document.getElementById('modal');
-  }
+    return portal;
+  }, []);
 
   /** Открыта ли модалка (для анимации) */
   const [isOpen, setOpen] = useState(false);
