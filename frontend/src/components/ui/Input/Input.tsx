@@ -1,8 +1,7 @@
-import React, { forwardRef, useCallback } from 'react';
+import React, { forwardRef, useCallback, useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { extractStyles } from '../../../services/utils'; // for pass tests
 import { InputProps } from './types';
-
-export type InputTypes = 'text' | 'number';
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({
   id,
@@ -18,15 +17,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
   onKeyDown,
   error,
   postfix,
+  type = 'text',
 }, ref) => {
   const onChangeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value) {
+    if (onChange) {
       const { value: val } = e.target;
-      if (onChange) {
-        onChange(val);
-      }
+      onChange(val);
     }
   }, [onChange]);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword((prevShowPassword) => !prevShowPassword);
+
+  const inputType = showPassword ? 'text' : type;
 
   return (
     <div className="flex flex-col">
@@ -42,23 +46,34 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
         </div>
       )}
       <div className={extractStyles`${error && 'border-red-600 text-red-600'}`}>
-        <input
-          ref={ref}
-          className={`input 
-          ${disabled || readOnly ? 'opacity-50 cursor-not-allowed' : ''} 
+        <div className="relative flex">
+          <input
+            ref={ref}
+            className={`input
+          ${disabled || readOnly ? 'opacity-50 cursor-not-allowed' : ''}
           ${className || ''}`}
-          disabled={disabled}
-          id={id}
-          onBlur={onBlur}
-          onChange={onChangeHandler}
-          onClick={onClick}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          type="text"
-          value={value || ''}
-        />
-        {postfix && <div className="w-min h-full">{postfix}</div>}
+            disabled={disabled}
+            id={id}
+            onBlur={onBlur}
+            onChange={onChangeHandler}
+            onClick={onClick}
+            onKeyDown={onKeyDown}
+            placeholder={placeholder}
+            readOnly={readOnly}
+            type={inputType}
+            value={value || ''}
+          />
+          {type === 'password' && (
+            <div
+              className="absolute top-1/2 right-3 -mt-4 cursor-pointer"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </div>
+          )}
+          {postfix && <div className="w-min h-full">{postfix}</div>}
+        </div>
+
       </div>
       {error && <div className="text-red-600 break-words text-xs pt-1">{error}</div>}
     </div>

@@ -45,6 +45,7 @@ const RegistrationForm: React.FC = observer(() => {
           className="mb-4"
           label="Your password"
           onChange={(e) => setPassword(e)}
+          type="password"
           value={password}
         />
         <Button

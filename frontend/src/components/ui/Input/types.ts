@@ -12,4 +12,5 @@ export interface InputProps {
   disabled?: boolean;
   postfix?: React.ReactNode;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  type?: 'text' | 'number' | 'password';
 }
