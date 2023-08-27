@@ -7,6 +7,7 @@ const ChartPage: React.FC = () => (
       { label: 'огурцы', size: 20 },
       { label: 'помидоры', size: 40 },
       { label: 'лук', size: 90 },
+      { label: 'лук2', size: 90 },
     ]}
     />
   </div>
