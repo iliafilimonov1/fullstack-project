@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import authStore from '../store/AuthStore/AuthStore';
+import useStores from '@/hooks/useStores';
 
 interface ProtectedRouteProps {
   children: React.ReactElement;
@@ -8,13 +8,13 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const router = useRouter();
-  const { isAuthenticated } = authStore;
+  const { authStore } = useStores();
 
   useEffect(() => {
-    if (!isAuthenticated && router.pathname !== '/LoginForm' && router.pathname !== '/RegistrationForm') {
+    if (!authStore.isAuthenticated && !['/LoginForm', '/RegistrationForm'].includes(router.pathname)) {
       router.push('/');
     }
-  }, [isAuthenticated]);
+  }, [authStore.isAuthenticated, router]);
 
   return children;
 };

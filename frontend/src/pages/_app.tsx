@@ -6,17 +6,17 @@ import { ModalProvider } from '../components/ui/Overlay/ModalContext';
 
 import MainLayout from '../Layouts/MainLayout';
 import AuthLayout from '../Layouts/AuthLayout';
-import authStore from '../store/AuthStore/AuthStore';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import useStores from '@/hooks/useStores';
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const { isAuthenticated } = authStore;
+  const { authStore } = useStores();
 
-  const PageWrapper = isAuthenticated ? MainLayout : AuthLayout;
+  const PageWrapper = authStore.isAuthenticated ? MainLayout : AuthLayout;
 
   useEffect(() => {
     authStore.checkAndRefreshTokens();
-  }, [isAuthenticated]);
+  }, [authStore]);
 
   return (
     <ModalProvider>
