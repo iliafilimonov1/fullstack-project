@@ -1,41 +1,40 @@
-import { makeAutoObservable } from 'mobx';
+import { computed, observable } from 'mobx';
 import { Status } from './types';
 
 /** Класс состояния стора */
-class StateStore {
+class BaseState {
   /** Статус стора */
-  public status: Status;
+  @observable private status: Status;
 
   /** Текст ошибки */
-  private _error?: string;
+  @observable private _error?: string;
 
   /** Ошибка стора */
-  public get error() {
+  @computed get error() {
     return this._error;
   }
 
   /** Статус загрузки */
-  public get isInitial(): boolean {
+  @computed get isInitial(): boolean {
     return this.status === Status.Initial;
   }
 
   /** Статус загрузки */
-  public get isLoading(): boolean {
+  @computed get isLoading(): boolean {
     return this.status === Status.Fetching;
   }
 
   /** Показатель успешности */
-  public get isSuccess(): boolean {
+  @computed get isSuccess(): boolean {
     return this.status === Status.Success;
   }
 
   /** Наличие ошибки */
-  public get isError(): boolean {
+  @computed get isError(): boolean {
     return this.status === Status.Error;
   }
 
   constructor(status?: Status, errorText?: string) {
-    makeAutoObservable(this);
     this.status = status ?? Status.Initial;
     if (errorText) {
       this._error = errorText;
@@ -43,4 +42,4 @@ class StateStore {
   }
 }
 
-export default StateStore;
+export default BaseState;

@@ -1,9 +1,10 @@
 import {
-  makeObservable, observable, action, runInAction,
+  observable, runInAction,
 } from 'mobx';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import BaseStore from '../BaseStore/BaseStore';
+import { ApiConnection } from '@/services/api';
 
 /**
  * Интерфейс для токенов доступа и обновления.
@@ -28,10 +29,6 @@ export interface AuthDto {
 class AuthStore extends BaseStore {
   @observable isAuthenticated = false;
 
-  constructor() {
-    super();
-  }
-
   /**
    * Регистрация пользователя.
    * @param {string} username - Логин пользователя.
@@ -42,7 +39,7 @@ class AuthStore extends BaseStore {
     await this.runWithStateControl(async () => {
       const dto = { username, password };
 
-      const response = await axios.post<Tokens>('http://localhost:3000/auth/local/signup', dto);
+      const response = await ApiConnection.post<Tokens>('auth/local/signup', dto);
 
       const tokens = response.data;
 
@@ -67,9 +64,9 @@ class AuthStore extends BaseStore {
    */
 
   async login(username: string, password: string) {
-    try {
+    await this.runWithStateControl(async () => {
       const dto: AuthDto = { username, password };
-      const response = await axios.post<Tokens>('http://localhost:3000/auth/local/signin', dto);
+      const response = await ApiConnection.post<Tokens>('auth/local/signin', dto);
       const tokens = response.data;
 
       Cookies.set('accessToken', tokens.access_token);
@@ -77,9 +74,7 @@ class AuthStore extends BaseStore {
       Cookies.set('accessTokenExpires', tokens.access_token_expires);
 
       this.isAuthenticated = true;
-    } catch (error) {
-      console.error('Error during login:', error);
-    }
+    });
   }
 
   async checkAndRefreshTokens() {
@@ -126,8 +121,8 @@ class AuthStore extends BaseStore {
    * Выход пользователя из системы.
    */
   async logout() {
-    try {
-      await axios.post('http://localhost:3000/auth/logout', null, {
+    await this.runWithStateControl(async () => {
+      await ApiConnection.post('auth/logout', null, {
         headers: {
           Authorization: `Bearer ${Cookies.get('accessToken')}`,
         },
@@ -137,11 +132,8 @@ class AuthStore extends BaseStore {
       Cookies.remove('accessTokenExpires');
 
       this.isAuthenticated = false;
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
+    });
   }
 }
 
-const authStore = new AuthStore();
-export default authStore;
+export default AuthStore;

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import authStore from '@/store/AuthStore/AuthStore';
+import { observer } from 'mobx-react-lite';
 import Modal from '@/components/ui/Modal/Modal';
 import Input from '@/components/ui/Input/Input';
 import Button from '@/components/ui/Button/Button';
+import useStores from '@/hooks/useStores';
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isModalOpen, setModalOpen] = useState<boolean>(true);
+
+  const { authStore } = useStores();
 
   const router = useRouter();
 
@@ -44,6 +47,8 @@ const LoginForm: React.FC = () => {
         />
         <Button
           className="w-full mt-24"
+          disabled={authStore.state?.isLoading}
+          isLoading={authStore.state?.isLoading}
           onClick={handleLogin}
           variant="primary"
         >
@@ -54,4 +59,4 @@ const LoginForm: React.FC = () => {
   ) : null;
 };
 
-export default LoginForm;
+export default observer(LoginForm);
