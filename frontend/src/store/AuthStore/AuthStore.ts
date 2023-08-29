@@ -4,24 +4,7 @@ import {
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import BaseStore from '../BaseStore/BaseStore';
-import { ApiConnection } from '@/services/api';
-
-/**
- * Интерфейс для токенов доступа и обновления.
- */
-export interface Tokens {
-  access_token: string;
-  refresh_token: string;
-  access_token_expires: string;
-}
-
-/**
- * Интерфейс для передачи данных аутентификации.
- */
-export interface AuthDto {
-  username: string;
-  password: string;
-}
+import AuthService from '@/services/AuthService';
 
 /**
  * Класс AuthStore для управления состоянием аутентификации пользователя.
@@ -37,11 +20,7 @@ class AuthStore extends BaseStore {
 
   async register(username: string, password: string): Promise<void> {
     await this.runWithStateControl(async () => {
-      const dto = { username, password };
-
-      const response = await ApiConnection.post<Tokens>('auth/local/signup', dto);
-
-      const tokens = response.data;
+      const tokens = await AuthService.register({ username, password });
 
       if (tokens) {
         Cookies.set('accessToken', tokens.access_token);
@@ -65,9 +44,7 @@ class AuthStore extends BaseStore {
 
   async login(username: string, password: string) {
     await this.runWithStateControl(async () => {
-      const dto: AuthDto = { username, password };
-      const response = await ApiConnection.post<Tokens>('auth/local/signin', dto);
-      const tokens = response.data;
+      const tokens = await AuthService.login({ username, password });
 
       Cookies.set('accessToken', tokens.access_token);
       Cookies.set('refreshToken', tokens.refresh_token);
@@ -122,11 +99,7 @@ class AuthStore extends BaseStore {
    */
   async logout() {
     await this.runWithStateControl(async () => {
-      await ApiConnection.post('auth/logout', null, {
-        headers: {
-          Authorization: `Bearer ${Cookies.get('accessToken')}`,
-        },
-      });
+      await AuthService.logout();
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
       Cookies.remove('accessTokenExpires');
