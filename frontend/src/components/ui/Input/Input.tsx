@@ -1,5 +1,6 @@
-import React, { forwardRef, useCallback, useState } from 'react';
+import React, { forwardRef, useCallback } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useToggle } from 'usehooks-ts';
 import { extractStyles } from '../../../services/utils'; // for pass tests
 import { InputProps } from './types';
 
@@ -26,9 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     }
   }, [onChange]);
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = () => setShowPassword((prevShowPassword) => !prevShowPassword);
+  const [showPassword, toggleShowPassword] = useToggle();
 
   const inputType = showPassword ? 'text' : type;
 
@@ -66,7 +65,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
           {type === 'password' && (
             <div
               className="absolute top-1/2 right-3 -mt-4 cursor-pointer"
-              onClick={togglePasswordVisibility}
+              onClick={toggleShowPassword}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </div>

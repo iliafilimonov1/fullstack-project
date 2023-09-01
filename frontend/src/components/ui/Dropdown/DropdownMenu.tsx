@@ -42,4 +42,4 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ items, onOptionSelect }) =>
   );
 };
 
-export default DropdownMenu;
+export default React.memo(DropdownMenu);
