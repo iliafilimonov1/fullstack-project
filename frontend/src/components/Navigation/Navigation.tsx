@@ -5,7 +5,7 @@ import { IoLogoApple } from 'react-icons/io';
 import { extractStyles } from '@/services/utils';
 import Button from '../ui/Button/Button';
 import { NavItem } from './types';
-import authStore from '@/store/AuthStore/AuthStore';
+import useStores from '@/hooks/useStores';
 
 /** Элементы навигации */
 const navItems: NavItem[] = [
@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
 const Navigation: React.FC = () => {
   /** Для маршрутизации */
   const router = useRouter();
+  const { authStore } = useStores();
 
   const [activeLink, setActiveLink] = useState<string>();
 
@@ -30,7 +31,7 @@ const Navigation: React.FC = () => {
 
   const logoutUser = useCallback(async () => {
     await authStore.logout();
-  }, []);
+  }, [authStore]);
 
   return (
     <header className="shadow bg-white h-16 mx-auto px-5 flex items-center justify-between">
@@ -66,5 +67,7 @@ const Navigation: React.FC = () => {
     </header>
   );
 };
+
+Navigation.displayName = 'Navigation';
 
 export default React.memo(Navigation);

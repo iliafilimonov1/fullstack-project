@@ -74,8 +74,9 @@ export const downloadFile = (response: AxiosResponse) => {
 };
 
 /** Сериалайзер запроса для Axios */
-// eslint-disable-next-line max-len
-export const paramsSerializer = (request: Record<string, unknown>): string => Object.entries(request)
+export const paramsSerializer = (
+  request: Record<string, unknown>,
+): string => Object.entries(request)
   .filter(([key, value]) => {
     if (value === false) {
       return !!key;
