@@ -50,4 +50,6 @@ const PieChart: React.FC<Props> = ({ data, maxSize }) => {
   return (<Bar data={preparedData} />);
 };
 
+PieChart.displayName = 'PieChart';
+
 export default React.memo(PieChart);
