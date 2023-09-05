@@ -19,9 +19,7 @@ class AuthService {
 
   static async logout() {
     await ApiConnection.post(`${this.RootPath}/logout`, null, {
-      headers: {
-        Authorization: `Bearer ${Cookies.get('accessToken')}`,
-      },
+      headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` },
     });
   }
 }

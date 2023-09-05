@@ -43,11 +43,7 @@ const Navigation: React.FC = () => {
         {navItems.map((item) => (
           <Button
             key={item.link}
-            className={
-              extractStyles`
-                ${item.link === activeLink ? 'bg-slate-100' : ''}
-              `
-            }
+            className={extractStyles`${item.link === activeLink ? 'bg-slate-100' : ''}`}
             onClick={() => onClickLinkHandler(item.link)}
             variant="ghost"
           >
@@ -63,7 +59,6 @@ const Navigation: React.FC = () => {
           Logout
         </Button>
       </div>
-
     </header>
   );
 };
