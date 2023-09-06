@@ -2,10 +2,11 @@ import React, { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { observer } from 'mobx-react-lite';
 import Button from '../components/ui/Button/Button';
-import authStore from '../store/AuthStore/AuthStore';
+import useStores from '@/hooks/useStores';
 
 const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
+  const { authStore } = useStores();
 
   const onSignInClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
