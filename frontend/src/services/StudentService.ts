@@ -6,6 +6,7 @@ class StudentsService {
     return 'students';
   }
 
+  /** Список студентов */
   static async StudentsList() {
     const response = await axios.get<Student[]>(this.RoutePath);
     return response;

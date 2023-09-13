@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import { ApiConnection } from './api';
 import { AuthDto, Tokens } from './types';
 
+/** Статитчный класс чисто для запросов */
 class AuthService {
   static get RootPath() {
     return '/auth';
