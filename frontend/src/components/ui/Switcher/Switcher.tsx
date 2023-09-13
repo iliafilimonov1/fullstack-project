@@ -23,4 +23,6 @@ const Switcher: React.FC = () => {
   );
 };
 
+Switcher.displayName = 'Switcher';
+
 export default React.memo(Switcher);
