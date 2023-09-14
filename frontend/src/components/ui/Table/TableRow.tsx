@@ -23,7 +23,7 @@ const TableRow = <T extends object>({
         />
       ))}
       <div className="py-2 px-4 border border-gray-300 flex items-center">
-        <DropdownCell<T>
+        <DropdownCell
           icon={<BiDotsHorizontalRounded />}
           onOptionSelect={(option) => onDropdownOptionSelect?.(option, rowData as T)}
           row={rowData}

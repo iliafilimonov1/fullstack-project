@@ -5,12 +5,14 @@ export interface ImageCellProps {
   alt?: string;
 }
 
-const ImageCell: React.FC<ImageCellProps> = ({ src, alt }) => {
-  return (
-    <div className="flex items-center border border-gray-300">
-      <img src={src} alt={alt} className="w-16 h-16 object-cover rounded-full max-w-full min-h-16" />
-    </div>
-  );
-};
+const ImageCell: React.FC<ImageCellProps> = ({ src, alt }) => (
+  <div className="flex items-center border border-gray-300">
+    <img
+      alt={alt}
+      className="w-16 h-16 object-cover rounded-full max-w-full min-h-16"
+      src={src}
+    />
+  </div>
+);
 
 export default ImageCell;
