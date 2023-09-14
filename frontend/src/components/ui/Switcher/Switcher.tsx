@@ -11,12 +11,7 @@ const Switcher: React.FC = () => {
       className=" w-[60px] h-[25px] rounded-full overflow-hidden"
       onClick={setToggle}
     >
-      <div className={
-        extractStyles`switcher
-          ${toggle ? 'border-l-[60px]' : 'border-r-[60px]'}
-        `
-      }
-      >
+      <div className={extractStyles`switcher ${toggle ? 'border-l-[60px]' : 'border-r-[60px]'}`}>
         <div className="w-[50px] h-full rounded-full bg-gray-100 shadow-inner" />
       </div>
     </div>
