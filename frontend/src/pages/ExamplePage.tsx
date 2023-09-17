@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import axios from 'axios';
 import useStores from '../hooks/useStores';
@@ -19,13 +19,13 @@ const ExamplePage: React.FC = () => {
     studentsStore.fetch();
   }, [studentsStore]);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = useCallback(() => {
     setSelectedStudent(undefined);
     setViewMode(false);
     setDrawerOpen(true);
-  };
+  }, []);
 
-  const createStudent = async (data: Student) => {
+  const createStudent = useCallback(async (data: Student) => {
     try {
       const response = await axios.post('http://localhost:3000/students', data);
 
@@ -38,9 +38,9 @@ const ExamplePage: React.FC = () => {
     } catch (error) {
       console.error('Ошибка при выполнении запроса', error);
     }
-  };
+  }, [studentsStore]);
 
-  const updateStudent = async (data: Omit<Student, 'id'>) => {
+  const updateStudent = useCallback(async (data: Omit<Student, 'id'>) => {
     if (selectedStudent) {
       try {
         const response = await axios.put(`http://localhost:3000/students/${selectedStudent.id}`, data);
@@ -54,9 +54,9 @@ const ExamplePage: React.FC = () => {
         console.error('Ошибка при выполнении запроса', error);
       }
     }
-  };
+  }, [selectedStudent, studentsStore]);
 
-  const handleDataSubmit = async (data: Omit<Student, 'id'>) => {
+  const handleDataSubmit = useCallback(async (data: Omit<Student, 'id'>) => {
     const studentData = { ...data };
 
     if (selectedStudent) {
@@ -67,9 +67,9 @@ const ExamplePage: React.FC = () => {
 
     setDrawerOpen(false);
     setViewMode(false);
-  };
+  }, [createStudent, selectedStudent, updateStudent]);
 
-  const handleDeleteClick = async (student: Student) => {
+  const handleDeleteClick = useCallback(async (student: Student) => {
     try {
       const response = await axios.delete(`http://localhost:3000/students/${student.id}`);
 
@@ -82,9 +82,9 @@ const ExamplePage: React.FC = () => {
     } catch (error) {
       console.error('Ошибка при выполнении запроса', error);
     }
-  };
+  }, [studentsStore]);
 
-  const handleDropdownOptionSelect = (option: string, student: Student) => {
+  const handleDropdownOptionSelect = useCallback((option: string, student: Student) => {
     if (option === 'Открыть') {
       setSelectedStudent(student);
       setViewMode(true);
@@ -92,7 +92,7 @@ const ExamplePage: React.FC = () => {
     } else if (option === 'Удалить') {
       handleDeleteClick(student);
     }
-  };
+  }, [handleDeleteClick]);
 
   return (
     <>
