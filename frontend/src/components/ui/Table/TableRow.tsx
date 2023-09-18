@@ -1,5 +1,6 @@
 import React from 'react';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import { observer } from 'mobx-react-lite';
 import DropdownCell from './DropDownCell';
 import TextCell from './TextCell';
 
@@ -33,4 +34,4 @@ const TableRow = <T extends object>({
   );
 };
 
-export default TableRow;
+export default observer(TableRow);
