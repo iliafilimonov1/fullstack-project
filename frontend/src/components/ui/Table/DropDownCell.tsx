@@ -14,8 +14,6 @@ const DropdownCell = <T, _>({ onOptionSelect, icon, row }: DropdownCellProps<T>)
     onOptionSelect?.(option);
   };
 
-  console.log(row);
-
   const dropDownItems = [
     {
       text: 'Открыть',
