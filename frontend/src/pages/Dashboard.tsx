@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from 'react';
+import React, { ReactNode, useCallback, useContext } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { ModalContext } from '../components/ui/Overlay/ModalContext';
 import ModalContent from '@/components/ui/Overlay/ModalContent';
@@ -12,19 +12,18 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   const modalContext = useContext(ModalContext);
 
-  const openModal = () => {
-    console.log('Modal opened');
+  const openModal = useCallback(() => {
     // @ts-ignore
     modalContext?.show(ModalContent, {
       isActive: true,
       zIndex: 1000,
       depth: 1,
       abort: () => {
-        console.log('Abort function called from ModalWrapper');
+        // eslint-disable-next-line react/destructuring-assignment
         modalContext.closeAll();
       },
     });
-  };
+  }, [modalContext]);
 
   return (
     <MainLayout>
