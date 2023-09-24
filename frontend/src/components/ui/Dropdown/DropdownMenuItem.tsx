@@ -11,4 +11,6 @@ const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({ text, icon, onItemC
   </div>
 );
 
+DropdownMenuItem.displayName = 'DropdownMenuItem';
+
 export default React.memo(DropdownMenuItem);
