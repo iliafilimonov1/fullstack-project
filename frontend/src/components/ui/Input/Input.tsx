@@ -72,11 +72,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
           )}
           {postfix && <div className="w-min h-full">{postfix}</div>}
         </div>
-
       </div>
       {error && <div className="text-red-600 break-words text-xs pt-1">{error}</div>}
     </div>
-
   );
 });
 
