@@ -10,6 +10,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const router = useRouter();
   const { authStore } = useStores();
 
+  console.log(router);
+
   useEffect(() => {
     if (!authStore.isAuthenticated && !['/LoginForm', '/RegistrationForm'].includes(router.pathname)) {
       router.push('/');
